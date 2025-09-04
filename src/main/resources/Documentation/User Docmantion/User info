@@ -1,0 +1,174 @@
+What is a User?
+A User is a person who can register, update their details, or safely delete their account.
+
+Attributes
+Field	Type	Description
+id	Long	Unique identifier in the database
+name	String	User’s full name
+email	String	Unique email for login
+password	String	Password (hashed securely)
+phone	String	Contact number
+deleted	Boolean	True = soft deleted (data retained)
+deletedAt	Instant	Time when user was soft-deleted
+User DTOs
+UserRegistrationRequest: For registering; requires name, email, password, phone. Uses @Valid for validation .
+
+UserUpdationRequest: For updates; requires name, email, phone. Changing email checks for uniqueness .
+
+UserResponse: API output; fields are id, name, email, phone, deleted, deletedAt .
+
+Exceptions
+Exception	When Triggered
+UserExistByEmailException	Email already registered
+UserNotFoundByEmailException	No user found by email
+Service Layer
+a) Add User
+Register new user
+
+Email must be unique, all fields valid
+
+Throws UserExistByEmailException if email in use
+
+Returns standardized response with new user data
+
+b) Edit User
+Edit details of an existing user
+
+Finds user by current email
+
+If changing email, checks that new email is not already registered
+
+Throws exceptions as applicable
+
+Updates details and returns standardized response
+
+Key Uniqueness Check (Java):
+java
+if (!user.getEmail().equals(userRequest.email()) && userRepository.existsByEmail(userRequest.email())) {
+    throw new UserExistByEmailException("User with the email already exists");
+}
+c) Soft Delete User
+Marks a user as deleted (deleted = true, deletedAt = Instant.now())
+
+User data retained for potential recovery
+
+Throws UserNotFoundByEmailException if user doesn’t exist
+
+Returns standardized response with updated data
+
+Controller Layer
+Annotations
+@RestController: Returns JSON data
+
+@CrossOrigin: Allows frontend API calls
+
+@AllArgsConstructor: Injects UserService, RestResponseBuilder
+
+API Endpoints
+Operation	Method	URL	Purpose
+Register User	POST	/register	Add new user
+Edit User	PUT	/users/{email}	Update user details
+Soft Delete User	DELETE	/users/{email}	Soft delete user account
+Examples
+Register User
+Request:
+
+json
+{
+  "name": "Akash Jena",
+  "email": "akash@gmail.com",
+  "password": "123456",
+  "phone": "9876543210"
+}
+Response:
+
+json
+{
+  "status": "success",
+  "message": "New User Details Has been added",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+Edit User
+Request:
+
+json
+{
+  "name": "Akash Jena",
+  "email": "newakash@gmail.com",
+  "phone": "9876543210"
+}
+Response:
+
+json
+{
+  "status": "success",
+  "message": "User Details has been updated",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "newakash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+Soft Delete User
+Response:
+
+json
+{
+  "status": "success",
+  "message": "UserDetails account has been deleted",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210",
+    "deleted": true,
+    "deletedAt": "2025-09-04T12:34:56Z"
+  }
+}
+Validation
+Use @Valid annotations for email, phone, and required fields in DTOs.
+
+Request bodies are checked before storing or updating .
+
+JSON Field Naming
+Use @JsonProperty to customize response field names as needed.
+
+Example:
+
+java
+@JsonProperty("error_message")
+private String errorMessage;
+This makes the response key "error_message" instead of "errorMessage".
+
+Soft Delete vs Hard Delete
+Type	Description
+Soft Delete	Marks as deleted, data still in DB
+Hard Delete	Removes user permanently (not implemented)
+Response Structure
+All API responses are in a standard JSON format:
+
+json
+{
+  "status": "success | error",
+  "message": "string",
+  "data": { ... }
+}
+This provides consistency for frontend integration and easier error handling .
+
+Summary
+User is the entity for movie bookers, uniquely identified by email.
+
+Supports add, update, and soft-delete via robust APIs.
+
+Validation, standardized exceptions, and responses ensure data safety and clarity.
+
+Email uniqueness and soft deletion checks prevent data loss and duplication.
+
+Designed for clear, consistent integration with frontend apps.
+

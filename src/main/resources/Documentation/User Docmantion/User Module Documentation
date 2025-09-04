@@ -1,0 +1,1152 @@
+All About User in Your Application
+
+In your Movie Booking application, the User represents a person who can register, update their details, or delete their account.
+
+1️⃣ What is a User?
+
+A User is an entity with these main attributes:
+
+id → unique identifier in the database
+
+name → user’s full name
+
+email → user’s email (must be unique)
+
+password → login password (stored securely, usually hashed)
+
+phone → user’s phone number
+
+deleted → boolean flag to indicate if the user is soft-deleted
+
+deletedAt → timestamp of when the user was soft-deleted
+
+Why important:
+
+Users are the main people who book movies.
+
+Each user must have a unique email for login and identification.
+
+2️⃣ What can you do with a User?
+
+Your system supports three main operations on a User:
+
+a) Register a new user
+
+What it does: Adds a new user to the system
+
+How: User sends their details (name, email, password, phone)
+
+Rules:
+
+Email must be unique
+
+All required fields must be valid
+
+Example:
+
+Akash registers with email akash@gmail.com → a new user account is created
+
+b) Update user details
+
+What it does: Change user info like name, phone, or email
+
+How: User sends new data along with their current email
+
+Rules:
+
+If changing email, the new email must not already exist
+
+User must exist in the database
+
+Example:
+
+Akash wants to change his email to newakash@gmail.com → system checks uniqueness → updates details
+
+c) Soft delete a user
+
+What it does: Marks the user account as deleted without removing data
+
+How: User sends a request with their email to delete account
+
+Rules:
+
+User must exist
+
+System sets deleted = true and records deletion time
+
+Example:
+
+Akash wants to delete his account → account is marked as deleted, but data remains in database
+
+3️⃣ Special checks in the system
+
+Unique email check: No two users can have the same email
+
+Soft delete check: Users are not fully removed → allows data recovery
+
+Validation: Input fields are checked for correctness before saving
+
+4️⃣ APIs related to User
+Operation	HTTP Method	URL	Purpose
+Register User	POST	/register	Add new user
+Edit User	PUT	/users/{email}	Update user details
+Soft Delete User	DELETE	/users/{email}	Soft delete a user account
+
+Responses are always standardized with status, message, and data.
+
+5️⃣ In Plain English
+
+The User is someone who can use your Movie Booking app.
+You can add a new user, update their info, or delete them safely.
+The system ensures emails are unique and users’ data is never lost by accident.
+
+If you want, I can also make a super short cheat-sheet of “User in one page” that you can memorize and tell anyone in 1 minute.
+
+Do you want me to do that?
+
+You said:
+Write file foramt i copy and past
+ChatGPT said:
+
+Sure Akash! Here’s a ready-to-copy documentation file for your User entity and APIs. You can save it as UserDocumentation.md or any .txt file.
+
+# User Documentation - Movie Booking Application
+
+## 1. What is a User?
+
+A **User** represents a person who can register, update details, or delete their account in the Movie Booking system.
+
+### Attributes:
+
+- **id**: Unique identifier for the user
+- **name**: Full name of the user
+- **email**: Unique email of the user (used for login)
+- **password**: User’s password (stored securely)
+- **phone**: Contact number
+- **deleted**: Boolean flag for soft deletion
+- **deletedAt**: Timestamp when user was soft-deleted
+
+---
+
+## 2. User Operations
+
+### a) Register a New User
+
+- **Endpoint:** POST `/register`
+- **Purpose:** Add a new user
+- **Request Body Example:**
+```json
+{
+  "name": "Akash Jena",
+  "email": "akash@gmail.com",
+  "password": "123456",
+  "phone": "9876543210"
+}
+
+
+Response Example:
+
+{
+  "status": "success",
+  "message": "New User Details Has been added",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+
+
+Errors:
+
+400 Bad Request → validation fails
+
+UserExistByEmailException → email already exists
+
+b) Edit User Details
+
+Endpoint: PUT /users/{email}
+
+Purpose: Update an existing user's details
+
+Path Variable: email → current email of the user
+
+Request Body Example:
+
+{
+  "name": "Akash Jena",
+  "email": "newakash@gmail.com",
+  "phone": "9876543210"
+}
+
+
+Response Example:
+
+{
+  "status": "success",
+  "message": "User Details has been updated",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "newakash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+
+
+Errors:
+
+UserNotFoundByEmailException → user does not exist
+
+UserExistByEmailException → new email already taken
+
+c) Soft Delete User
+
+Endpoint: DELETE /users/{email}
+
+Purpose: Mark a user as deleted without removing data
+
+Path Variable: email → email of the user
+
+Response Example:
+
+{
+  "status": "success",
+  "message": "UserDetails account has been deleted",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210",
+    "deleted": true,
+    "deletedAt": "2025-09-04T12:34:56Z"
+  }
+}
+
+
+Errors:
+
+UserNotFoundByEmailException → user does not exist
+
+3. Rules & Checks
+
+Emails must be unique.
+
+Soft delete allows recovery of user data later.
+
+Request body fields are validated using @Valid.
+
+API responses are standardized with status, message, and data.
+
+4. Summary
+
+Users can register, update their info, or soft delete their account.
+
+The system ensures no duplicate emails and data safety.
+
+All operations return a consistent JSON response for frontend usage.
+
+
+---
+
+If you want, I can also **make a shorter 1-page version** that you can **memorize and tell anyone quickly**.
+
+Do you want me to do that?
+
+You said:
+Single File Write
+ChatGPT said:
+
+Got it, Akash! Here’s a single ready-to-copy file with all the details about the User entity and APIs in one place. You can save it as UserDocumentation.md.
+
+# User Documentation - Movie Booking Application
+
+## What is a User?
+
+A **User** represents a person who can register, update their details, or delete their account in the Movie Booking system.
+
+### Attributes:
+- **id**: Unique identifier for the user
+- **name**: Full name of the user
+- **email**: Unique email of the user (used for login)
+- **password**: User’s password (stored securely)
+- **phone**: Contact number
+- **deleted**: Boolean flag for soft deletion
+- **deletedAt**: Timestamp when user was soft-deleted
+
+---
+
+## User Operations
+
+### 1. Register a New User
+- **Endpoint:** POST `/register`
+- **Purpose:** Add a new user
+- **Request Body Example:**
+```json
+{
+  "name": "Akash Jena",
+  "email": "akash@gmail.com",
+  "password": "123456",
+  "phone": "9876543210"
+}
+
+
+Response Example:
+
+{
+  "status": "success",
+  "message": "New User Details Has been added",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+
+
+Errors:
+
+400 Bad Request → validation fails
+
+UserExistByEmailException → email already exists
+
+2. Edit User Details
+
+Endpoint: PUT /users/{email}
+
+Purpose: Update an existing user's details
+
+Path Variable: email → current email of the user
+
+Request Body Example:
+
+{
+  "name": "Akash Jena",
+  "email": "newakash@gmail.com",
+  "phone": "9876543210"
+}
+
+
+Response Example:
+
+{
+  "status": "success",
+  "message": "User Details has been updated",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "newakash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+
+
+Errors:
+
+UserNotFoundByEmailException → user does not exist
+
+UserExistByEmailException → new email already taken
+
+3. Soft Delete User
+
+Endpoint: DELETE /users/{email}
+
+Purpose: Mark a user as deleted without removing data
+
+Path Variable: email → email of the user
+
+Response Example:
+
+{
+  "status": "success",
+  "message": "UserDetails account has been deleted",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210",
+    "deleted": true,
+    "deletedAt": "2025-09-04T12:34:56Z"
+  }
+}
+
+
+Errors:
+
+UserNotFoundByEmailException → user does not exist
+
+Rules & Checks
+
+Emails must be unique.
+
+Soft delete allows recovering user data later.
+
+Request body fields are validated using @Valid.
+
+API responses are standardized with status, message, and data.
+
+Summary
+
+Users can register, update their info, or soft delete their account.
+
+The system ensures no duplicate emails and data safety.
+
+All operations return a consistent JSON response for frontend usage.
+
+
+---
+
+If you want, I can also make a **super short one-page cheat sheet** version you can **memorize and explain quickly**.
+
+Do you want me to do that?
+
+You said:
+Everthing Write Single File
+ChatGPT said:
+
+Got it, Akash! I’ll write everything about the User module, its fields, operations, validations, exceptions, and APIs in a single file that you can copy and paste. This will be a complete reference document.
+
+# User Module Documentation - Movie Booking Application
+
+## 1. What is a User?
+
+A **User** represents a person who can register, update details, or delete their account in the Movie Booking system.
+
+### Attributes:
+
+- **id**: Unique identifier for the user
+- **name**: Full name of the user
+- **email**: Unique email of the user (used for login)
+- **password**: User’s password (stored securely)
+- **phone**: Contact number
+- **deleted**: Boolean flag to indicate soft deletion
+- **deletedAt**: Timestamp when the user was soft-deleted
+
+**Notes:**
+- Email must always be **unique**.
+- `deleted = true` means the user is soft-deleted but data is not removed.
+
+---
+
+## 2. User Service Methods
+
+### a) `addUser(UserRegistrationRequest user)`
+
+- **Purpose:** Register a new user in the system.
+- **Checks:**
+  - Email must be unique
+  - Validates all required fields using `@Valid`
+
+**Exceptions:**
+- `UserExistByEmailException` → if email already exists
+
+---
+
+### b) `editUser(UserUpdationRequest userRequest, String email)`
+
+- **Purpose:** Edit existing user details. Email can also be updated.
+- **Steps:**
+  1. Check if user exists by current email
+  2. If changing email, check that the new email is not already used
+  3. Update user details
+- **Exceptions:**
+  - `UserNotFoundByEmailException` → if user with current email does not exist
+  - `UserExistByEmailException` → if new email is already taken
+
+**Important Check in Code:**
+
+```java
+if (!user.getEmail().equals(userRequest.email()) && userRepository.existsByEmail(userRequest.email())) {
+    throw new UserExistByEmailException("User with the email already exists");
+}
+
+
+Checks:
+
+Are you changing the email?
+
+Is the new email already taken?
+→ If both true → throw error
+
+c) softDeleteUser(String email)
+
+Purpose: Soft delete a user (mark as deleted without removing data)
+
+Steps:
+
+Check if user exists by email
+
+Set deleted = true
+
+Set deletedAt = current timestamp
+
+Save changes
+
+Exceptions:
+
+UserNotFoundByEmailException → if user does not exist
+
+3. User Controller APIs
+Operation	HTTP Method	URL	Description
+Register User	POST	/register	Add new user
+Edit User	PUT	/users/{email}	Update user details
+Soft Delete User	DELETE	/users/{email}	Mark user as deleted (soft delete)
+a) Register User API
+
+Request Body Example:
+
+{
+  "name": "Akash Jena",
+  "email": "akash@gmail.com",
+  "password": "123456",
+  "phone": "9876543210"
+}
+
+
+Response Example:
+
+{
+  "status": "success",
+  "message": "New User Details Has been added",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+
+
+Errors:
+
+UserExistByEmailException → email already exists
+
+400 Bad Request → validation fails
+
+b) Edit User API
+
+Request Body Example:
+
+{
+  "name": "Akash Jena",
+  "email": "newakash@gmail.com",
+  "phone": "9876543210"
+}
+
+
+Response Example:
+
+{
+  "status": "success",
+  "message": "User Details has been updated",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "newakash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+
+
+Errors:
+
+UserNotFoundByEmailException → user does not exist
+
+UserExistByEmailException → new email already taken
+
+c) Soft Delete User API
+
+Response Example:
+
+{
+  "status": "success",
+  "message": "UserDetails account has been deleted",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210",
+    "deleted": true,
+    "deletedAt": "2025-09-04T12:34:56Z"
+  }
+}
+
+
+Errors:
+
+UserNotFoundByEmailException → user does not exist
+
+4. Special Notes
+
+Validation: All input fields are validated using @Valid.
+
+JSON Naming: Use @JsonProperty for custom JSON field names like error_message.
+
+Soft Delete vs Hard Delete:
+
+Soft delete → marks user deleted but keeps data
+
+Hard delete → completely removes user from database (not used here)
+
+Response Structure: All responses are wrapped in a standard format:
+
+{
+  "status": "success | error",
+  "message": "string",
+  "data": {}
+}
+
+
+Service Layer: Business logic is handled in UserService → keeps controller clean.
+
+Controller Layer: Handles HTTP requests and uses RestResponseBuilder to send standardized responses.
+
+5. Summary
+
+Users can register, update their info, and soft delete their account.
+
+Email is always unique.
+
+Soft delete allows data recovery.
+
+All operations provide consistent JSON responses for frontend usage.
+
+Exceptions are thrown for not found or duplicate email scenarios.
+
+End of User Module Documentation
+
+
+---
+
+If you want, I can also **create a short 1-page cheat sheet version** you can memorize and explain to anyone in **1-2 minutes**.
+
+Do you want me to do that?
+
+You said:
+Whaevr Write write one file a to z
+ChatGPT said:
+
+Got it, Akash! I will write a complete A–Z single file for the User module including everything—entity, service, controller, validations, APIs, exceptions, soft delete, JSON mapping, and explanation. You can copy this as one complete documentation or reference file.
+
+# User Module - Complete Documentation (A to Z)
+Movie Booking Application
+
+---
+
+## 1️⃣ What is a User?
+
+A **User** represents a person who can:
+
+- Register in the system
+- Update their details
+- Soft delete their account
+
+### Attributes:
+
+| Field       | Type      | Description                               |
+|------------|-----------|-------------------------------------------|
+| id         | Long      | Unique identifier                         |
+| name       | String    | Full name of the user                      |
+| email      | String    | Unique email for login                     |
+| password   | String    | User’s password (hashed securely)         |
+| phone      | String    | Contact number                             |
+| deleted    | Boolean   | Flag for soft deletion                     |
+| deletedAt  | Instant   | Timestamp when soft-deleted                |
+
+**Notes:**
+- Email must always be unique.
+- `deleted = true` → user is soft-deleted but data is not removed.
+
+---
+
+## 2️⃣ User DTOs
+
+### a) `UserRegistrationRequest`
+
+Fields required to **register a new user**:
+
+- name, email, password, phone
+- Uses `@Valid` for input validation
+
+### b) `UserUpdationRequest`
+
+Fields to **update user details**:
+
+- name, email, phone
+- Email can be updated but must remain unique
+
+### c) `UserResponse`
+
+Fields returned in API responses:
+
+- id, name, email, phone, deleted, deletedAt
+
+---
+
+## 3️⃣ Exceptions
+
+| Exception                        | When is it thrown?                          |
+|---------------------------------|--------------------------------------------|
+| UserExistByEmailException        | Email is already registered                |
+| UserNotFoundByEmailException     | User with given email does not exist       |
+
+---
+
+## 4️⃣ Service Layer
+
+### a) `addUser(UserRegistrationRequest user)`
+
+- **Purpose:** Register a new user
+- **Steps:**
+  1. Check if email exists → throw `UserExistByEmailException`
+  2. Save new user
+  3. Return `UserResponse`
+
+### b) `editUser(UserUpdationRequest userRequest, String email)`
+
+- **Purpose:** Update existing user details
+- **Steps:**
+  1. Find user by current email → throw `UserNotFoundByEmailException` if not found
+  2. Check if new email is being changed and already exists → throw `UserExistByEmailException`
+  3. Update user details
+  4. Return `UserResponse`
+
+**Important Code Check:**
+
+```java
+if (!user.getEmail().equals(userRequest.email()) && userRepository.existsByEmail(userRequest.email())) {
+    throw new UserExistByEmailException("User with the email already exists");
+}
+
+c) softDeleteUser(String email)
+
+Purpose: Soft delete a user
+
+Steps:
+
+Find user by email → throw UserNotFoundByEmailException if not found
+
+Set deleted = true and deletedAt = Instant.now()
+
+Save user
+
+Return UserResponse
+
+5️⃣ Controller Layer
+
+UserController handles HTTP requests:
+
+Annotations:
+
+@RestController → returns JSON
+
+@CrossOrigin → allows frontend access
+
+@AllArgsConstructor → constructor injection for UserService and RestResponseBuilder
+
+APIs:
+Operation	HTTP Method	URL	Description
+Register User	POST	/register	Add new user
+Edit User	PUT	/users/{email}	Update user details
+Soft Delete User	DELETE	/users/{email}	Mark user as deleted (soft delete)
+a) Register User
+
+Request Body:
+
+{
+  "name": "Akash Jena",
+  "email": "akash@gmail.com",
+  "password": "123456",
+  "phone": "9876543210"
+}
+
+
+Response:
+
+{
+  "status": "success",
+  "message": "New User Details Has been added",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+
+
+Errors:
+
+UserExistByEmailException → email already exists
+
+400 Bad Request → validation fails
+
+b) Edit User
+
+Request Body:
+
+{
+  "name": "Akash Jena",
+  "email": "newakash@gmail.com",
+  "phone": "9876543210"
+}
+
+
+Response:
+
+{
+  "status": "success",
+  "message": "User Details has been updated",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "newakash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+
+
+Errors:
+
+UserNotFoundByEmailException → user does not exist
+
+UserExistByEmailException → new email already taken
+
+c) Soft Delete User
+
+Response:
+
+{
+  "status": "success",
+  "message": "UserDetails account has been deleted",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210",
+    "deleted": true,
+    "deletedAt": "2025-09-04T12:34:56Z"
+  }
+}
+
+
+Errors:
+
+UserNotFoundByEmailException → user does not exist
+
+6️⃣ JSON Field Naming
+
+Use @JsonProperty to customize JSON keys:
+
+@JsonProperty("error_message")
+private String errorMessage;
+
+
+Converts Java field errorMessage → JSON key "error_message"
+
+7️⃣ Validation
+
+Use @Valid in DTOs for checking:
+
+Required fields
+
+Proper formats (email, phone)
+
+8️⃣ Soft Delete vs Hard Delete
+Type	Description
+Soft Delete	Marks deleted but keeps data (deleted = true)
+Hard Delete	Permanently removes user from database (not used here)
+9️⃣ Response Structure
+
+All API responses use a standard format:
+
+{
+  "status": "success | error",
+  "message": "string",
+  "data": {}
+}
+
+
+Makes frontend handling consistent
+
+🔟 Summary
+
+Users can register, update details, and soft delete their account
+
+System ensures unique emails
+
+Soft delete allows data recovery
+
+Validations prevent bad input
+
+Exceptions handle not found or duplicate email cases
+
+Responses are consistent JSON for frontend
+
+End of User Module Documentation
+
+
+---
+
+This is a **full A–Z single file** including everything from fields to APIs, service logic, validations, exceptions, JSON mapping, soft delete, and response structure.
+
+I can also make a **diagram showing the full flow** (Frontend → Controller → Service → Repository → DB) if you want—it will make it super easy to explain to anyone.
+
+Do you want me to do that?
+
+You said:
+same problem one file write evrything
+ChatGPT said:
+
+Got it, Akash! I will write everything about the User module in one single file, from A to Z, including entity, DTOs, service logic, controller, exceptions, validations, soft delete, JSON mapping, response structure, and examples. You can copy this whole file as your complete reference documentation.
+
+# User Module Documentation - Movie Booking Application (Complete A-Z)
+
+---
+
+## 1️⃣ What is a User?
+
+A **User** is a person who can:
+
+- Register in the system
+- Update their details
+- Soft delete their account
+
+### Attributes:
+
+| Field       | Type      | Description                               |
+|------------|-----------|-------------------------------------------|
+| id         | Long      | Unique identifier for the user           |
+| name       | String    | Full name of the user                     |
+| email      | String    | Unique email (used for login)            |
+| password   | String    | User’s password (hashed securely)        |
+| phone      | String    | Contact number                            |
+| deleted    | Boolean   | Flag for soft deletion                    |
+| deletedAt  | Instant   | Timestamp when soft-deleted               |
+
+**Notes:**
+- Email must always be unique
+- `deleted = true` → user is soft-deleted but data remains in the database
+
+---
+
+## 2️⃣ DTOs (Data Transfer Objects)
+
+### a) UserRegistrationRequest
+Used to **register a new user**:
+
+- Fields: name, email, password, phone
+- Validated using `@Valid`
+
+### b) UserUpdationRequest
+Used to **update user details**:
+
+- Fields: name, email, phone
+- Email can be changed but must be unique
+
+### c) UserResponse
+Returned in API responses:
+
+- Fields: id, name, email, phone, deleted, deletedAt
+
+---
+
+## 3️⃣ Exceptions
+
+| Exception                        | When is it thrown?                          |
+|---------------------------------|--------------------------------------------|
+| UserExistByEmailException        | Email is already registered                |
+| UserNotFoundByEmailException     | User with given email does not exist       |
+
+---
+
+## 4️⃣ Service Layer
+
+### a) addUser(UserRegistrationRequest user)
+- **Purpose:** Register a new user
+- **Steps:**
+  1. Check if email exists → throw `UserExistByEmailException`
+  2. Save new user
+  3. Return `UserResponse`
+
+### b) editUser(UserUpdationRequest userRequest, String email)
+- **Purpose:** Edit user details
+- **Steps:**
+  1. Find user by current email → throw `UserNotFoundByEmailException` if not found
+  2. If email is changed and new email exists → throw `UserExistByEmailException`
+  3. Update user details
+  4. Return `UserResponse`
+
+**Important Code Check:**
+
+```java
+if (!user.getEmail().equals(userRequest.email()) && userRepository.existsByEmail(userRequest.email())) {
+    throw new UserExistByEmailException("User with the email already exists");
+}
+
+c) softDeleteUser(String email)
+
+Purpose: Soft delete a user
+
+Steps:
+
+Find user by email → throw UserNotFoundByEmailException if not found
+
+Set deleted = true and deletedAt = Instant.now()
+
+Save user
+
+Return UserResponse
+
+5️⃣ Controller Layer
+
+UserController handles HTTP requests:
+
+Annotations:
+
+@RestController → returns JSON
+
+@CrossOrigin → allows frontend access
+
+@AllArgsConstructor → constructor injection for UserService and RestResponseBuilder
+
+APIs:
+Operation	HTTP Method	URL	Description
+Register User	POST	/register	Add new user
+Edit User	PUT	/users/{email}	Update user details
+Soft Delete User	DELETE	/users/{email}	Mark user as deleted (soft delete)
+a) Register User
+
+Request Body:
+
+{
+  "name": "Akash Jena",
+  "email": "akash@gmail.com",
+  "password": "123456",
+  "phone": "9876543210"
+}
+
+
+Response:
+
+{
+  "status": "success",
+  "message": "New User Details Has been added",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+
+
+Errors:
+
+UserExistByEmailException → email already exists
+
+400 Bad Request → validation fails
+
+b) Edit User
+
+Request Body:
+
+{
+  "name": "Akash Jena",
+  "email": "newakash@gmail.com",
+  "phone": "9876543210"
+}
+
+
+Response:
+
+{
+  "status": "success",
+  "message": "User Details has been updated",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "newakash@gmail.com",
+    "phone": "9876543210"
+  }
+}
+
+
+Errors:
+
+UserNotFoundByEmailException → user does not exist
+
+UserExistByEmailException → new email already taken
+
+c) Soft Delete User
+
+Response:
+
+{
+  "status": "success",
+  "message": "UserDetails account has been deleted",
+  "data": {
+    "id": 1,
+    "name": "Akash Jena",
+    "email": "akash@gmail.com",
+    "phone": "9876543210",
+    "deleted": true,
+    "deletedAt": "2025-09-04T12:34:56Z"
+  }
+}
+
+
+Errors:
+
+UserNotFoundByEmailException → user does not exist
+
+6️⃣ JSON Field Naming
+
+Use @JsonProperty to customize JSON keys:
+
+@JsonProperty("error_message")
+private String errorMessage;
+
+
+Converts Java field errorMessage → JSON key "error_message"
+
+7️⃣ Validation
+
+Use @Valid in DTOs for checking:
+
+Required fields
+
+Proper formats (email, phone)
+
+8️⃣ Soft Delete vs Hard Delete
+Type	Description
+Soft Delete	Marks deleted but keeps data (deleted = true)
+Hard Delete	Permanently removes user from database (not used here)
+9️⃣ Response Structure
+
+All API responses use a standard format:
+
+{
+  "status": "success | error",
+  "message": "string",
+  "data": {}
+}
+
+
+Makes frontend handling consistent
+
+🔟 Summary
+
+Users can register, update details, and soft delete their account
+
+System ensures unique emails
+
+Soft delete allows data recovery
+
+Validations prevent bad input
+
+Exceptions handle not found or duplicate email cases
+
+Responses are consistent JSON for frontend
