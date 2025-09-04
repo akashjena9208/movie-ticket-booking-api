@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 public class TheaterOwner extends UserDetails{
 
-//    @OneToMany(mappedBy = "theaterOwner")
-//    private List<Theater> theater;
+    @OneToMany(mappedBy = "theaterOwner")
+    private List<Theater> theater;
 
 }

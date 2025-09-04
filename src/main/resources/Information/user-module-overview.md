@@ -1,84 +1,74 @@
-# 👤 User Module – Movie Booking System
+# 👤 User & Theater Modules – Movie Booking System
 
-The **User module** manages all types of users in the Movie Booking System.  
-It supports **customers (USER)** and **theater owners (THEATER_OWNER)**.
+This document includes both **User Module** and **Theater Module** for the Movie Booking System.
 
 ---
+
+# 👤 User Module
+
+The **User module** manages all types of users. It supports **customers (USER)** and **theater owners (THEATER\_OWNER)**.
 
 ## 🔹 What Users Can Do
 
 ### 1. Register (Sign Up)
-Users can create an account with:
 
-- **Username**
-- **Email** (unique)
-- **Password** (secure: 8–20 chars, uppercase, lowercase, number, special char)
-- **Phone Number** (10-digit Indian number)
-- **Date of Birth**
-- **Role** (USER / THEATER_OWNER)
+* **Username**
+* **Email** (unique)
+* **Password** (secure: 8–20 chars, uppercase, lowercase, number, special char)
+* **Phone Number** (10-digit Indian number)
+* **Date of Birth**
+* **Role** (USER / THEATER\_OWNER)
 
-> Once registered, the system stores details **securely**.
+> System stores details **securely**.
 
 ### 2. Update Profile
-Users can update:
 
-- **Username**
-- **Email** (if not taken by another user)
-- **Phone Number**
-- **Date of Birth**
-
-> Keeps user information **up-to-date**.
+* **Username**
+* **Email** (if not taken)
+* **Phone Number**
+* **Date of Birth**
 
 ### 3. Soft Delete Account
-Instead of permanent deletion:
 
-- User cannot **log in** or use the system
-- Record is **kept in the database** for audit/history
-
-> Safer than hard delete — **data is not lost**.
-
----
+* User cannot **log in**
+* Record remains in the database
 
 ## 🔹 Types of Users
 
-- **USER (Customer)** → browse movies, book tickets
-- **THEATER_OWNER** → manage theaters, movies, and shows
-
----
+* **USER (Customer)** → browse movies, book tickets
+* **THEATER\_OWNER** → manage theaters, movies, shows
 
 ## 🔹 Why This is Important
 
-- **Security:** Validates emails & passwords
-- **Data Integrity:** Prevents duplicate emails/phones
-- **Flexibility:** Supports multiple roles
-- **Safety:** Soft delete keeps data for history
-
----
+* **Security:** Validates emails & passwords
+* **Data Integrity:** Prevents duplicates
+* **Flexibility:** Supports multiple roles
+* **Safety:** Soft delete keeps history
 
 ## ✅ Summary
 
-The **User Module** handles **sign up, profile updates, and account deletion** while keeping the system **secure, flexible, and well-structured**.
+Handles **sign up, updates, deletion** while keeping system secure and flexible.
 
 ---
 
-# 🛠 API Endpoints
+# 🛠 User API Endpoints
 
 **Base URL:** `http://localhost:8080`
 
-**Common Header for all APIs:**
+**Headers:**
 
-| Key           | Value             |
-|---------------|-----------------|
-| Content-Type  | application/json |
+| Key          | Value            |
+| ------------ | ---------------- |
+| Content-Type | application/json |
 
----
-
-## 1️⃣ Register User
+### 1️⃣ Register User
 
 **POST** `/register`
 
-**Request Body:**
+**Request Examples:**
+
 ```json
+// User
 {
   "username": "akash_jena",
   "email": "akash@gmail.com",
@@ -88,12 +78,111 @@ The **User Module** handles **sign up, profile updates, and account deletion** w
   "dateOfBirth": "1995-05-10"
 }
 
-http://localhost:8080/users/akash@example.com
+// Theater Owner
+{
+  "username": "RohitOwner",
+  "email": "rohit.owner@example.com",
+  "password": "Owner@1234",
+  "phoneNumber": "9876543210",
+  "userRole": "THEATER_OWNER",
+  "dateOfBirth": "1990-01-15"
+}
+```
+
+### 2️⃣ Update User
+
+**PUT** `/users/{email}`
+
+**Request Example:**
+
+```json
 {
   "username": "AkashNew",
   "email": "akash.new@example.com",
   "phoneNumber": "9123456789",
   "dateOfBirth": "2000-08-15"
 }
+```
 
-http://localhost:8080/users/akash.new@example.com
+---
+
+# 👤 Theater Module
+
+The **Theater module** manages theaters, linked to theater owners.
+
+## 🔹 What Theaters Can Do
+
+1. **Add Theater** – name, address, city, landmark
+2. **Update Theater** – update existing details
+3. **Find Theater** – fetch details by ID
+
+## 🔹 Who Can Access
+
+* **THEATER\_OWNER** → add, update, fetch theaters
+* **USER** → cannot manage theaters
+
+## ✅ Summary
+
+Handles **theater creation, updates, retrieval** with owner association.
+
+---
+
+# 🛠 Theater API Endpoints
+
+**Base URL:** `http://localhost:8080`
+
+**Headers:**
+
+| Key          | Value            |
+| ------------ | ---------------- |
+| Content-Type | application/json |
+
+### 1️⃣ Add Theater
+
+**POST** `/theaters?email={theaterOwnerEmail}`
+
+**Request Example:**
+
+```json
+{
+  "name": "Galaxy Cinema",
+  "address": "123 Main Street",
+  "city": "Bhubaneswar",
+  "landmark": "Near Park"
+}
+```
+
+### 2️⃣ Find Theater
+
+**GET** `/theaters/{theaterId}`
+
+### 3️⃣ Update Theater
+
+**PUT** `/theaters/{theaterId}`
+
+**Request Example:**
+
+```json
+{
+  "name": "Galaxy Cinema Upd",
+  "address": "456 New Street",
+  "city": "Bhubaneswar",
+  "landmark": "Near Mall"
+}
+```
+
+## ✅ Validation Rules
+
+| Field    | Required | Min | Max |
+| -------- | -------- | --- | --- |
+| name     | Yes      | 1   | 20  |
+| address  | Yes      | 1   | 50  |
+| city     | Yes      | 1   | 20  |
+| landmark | Yes      | 1   | 20  |
+
+## ✅ Quick Postman Testing Flow
+
+1. Register theater owner (`/register`)
+2. Add theater (`/theaters?email={ownerEmail}`)
+3. Find theater (`/theaters/{theaterId}`)
+4. Update theater (`/theaters/{theaterId}`)
