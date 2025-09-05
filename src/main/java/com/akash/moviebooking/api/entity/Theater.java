@@ -42,8 +42,8 @@ public class Theater {
     @JoinColumn(name = "theater_owner_id")
     private TheaterOwner theaterOwner;
 
-//    @OneToMany(mappedBy = "theater")
-//    private List<Screen> screens;
+    @OneToMany(mappedBy = "theater")
+    private List<Screen> screens;
 
 //    @OneToMany(mappedBy = "theater")
 //    private List<Show> shows;
