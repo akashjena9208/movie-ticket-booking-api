@@ -1,5 +1,6 @@
 package com.akash.moviebooking.api.exceptions.handler;
 
+import com.akash.moviebooking.api.exceptions.CityNotFoundException;
 import com.akash.moviebooking.api.exceptions.TheaterNotFoundByIdException;
 import com.akash.moviebooking.api.util.ErrorStructure;
 import com.akash.moviebooking.api.util.RestResponseBuilder;
@@ -20,9 +21,9 @@ public class TheaterExceptionHandler {
         return responseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-//    @ExceptionHandler
-//    public ResponseEntity<ErrorStructure> handleCityNotFoundException(CityNotFoundException ex){
-//        return responseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage());
-//    }
+    @ExceptionHandler
+    public ResponseEntity<ErrorStructure> handleCityNotFoundException(CityNotFoundException ex){
+        return responseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
 
 }

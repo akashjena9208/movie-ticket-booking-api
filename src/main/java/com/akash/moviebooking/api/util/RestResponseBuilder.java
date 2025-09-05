@@ -1,5 +1,6 @@
 package com.akash.moviebooking.api.util;
 
+import com.akash.moviebooking.api.dto.MovieResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,5 +24,6 @@ public class RestResponseBuilder{
                 .errorMessage(message)
                 .build());
     }
+
 
 }

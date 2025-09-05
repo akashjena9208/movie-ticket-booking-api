@@ -9,9 +9,9 @@ import java.util.Set;
 @Entity
 public class User extends UserDetails{
 
-//    @OneToMany(mappedBy = "user")
-//    private List<Feedback> feedbacks;
-//
+    @OneToMany(mappedBy = "user")
+    private List<Feedback> feedbacks;
+
 //    @OneToMany(mappedBy = "user")
 //    private Set<Booking> bookings;
 
