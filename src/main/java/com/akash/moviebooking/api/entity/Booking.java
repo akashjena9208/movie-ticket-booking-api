@@ -1,6 +1,6 @@
 package com.akash.moviebooking.api.entity;
 
-
+import com.akash.moviebooking.api.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,39 +16,36 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
 @ToString
-@Table(name = "movie_show")
-public class Show {
+@EntityListeners(AuditingEntityListener.class)
+public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "show_id")
-    private String showId;
+    @Column(name = "booking_id")
+    private String bookingId;
 
-    @Column(name = "starts_at")
-    private Instant startsAt;
+    @Enumerated(EnumType.STRING)
+    private BookingStatus bookingStatus;
 
-    @Column(name = "ends_at")
-    private Instant endsAt;
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "screen_id")
-    private Screen screen;
+    @Column(name = "total_amount", nullable = false)
+    private Double totalAmount;
 
     @ManyToOne
-    @JoinColumn(name = "movie_id")
-    private Movie movie;
+    @JoinColumn(name = "user_id")
+    private UserDetails user;   // ✅ Changed to UserDetails
 
     @ManyToOne
-    @JoinColumn(name = "theater_id")
-    private Theater theater;
+    @JoinColumn(name = "show_id")
+    private Show show;
 
-
-    @OneToMany(mappedBy = "show")
-    private List<Booking> bookings;
-
+    @ManyToMany
+    @JoinTable(
+            name = "booking_seats",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "seat_id")
+    )
+    private List<Seat> seats;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -62,6 +59,6 @@ public class Show {
     @Column(name = "created_by")
     private String createdBy;
 
-
-
+    @ManyToOne
+    private Booking booking;
 }

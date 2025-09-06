@@ -31,8 +31,8 @@ public class Seat {
     @JoinColumn(name = "screen_id")
     private Screen screen;
 
-//    @ManyToMany(mappedBy = "seats")
-//    private List<Booking> bookings;
+    @ManyToMany(mappedBy = "seats")
+    private List<Booking> bookings;
 
     @Column(name = "is_delete")
     private boolean isDelete;
@@ -44,6 +44,8 @@ public class Seat {
     @CreatedDate
     @Column(name = "created_at")
     private Instant createdAt;
+
+    private Double price;
 
 
 }

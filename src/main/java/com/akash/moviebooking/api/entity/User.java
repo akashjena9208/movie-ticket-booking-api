@@ -12,7 +12,7 @@ public class User extends UserDetails{
     @OneToMany(mappedBy = "user")
     private List<Feedback> feedbacks;
 
-//    @OneToMany(mappedBy = "user")
-//    private Set<Booking> bookings;
+    @OneToMany(mappedBy = "user")
+    private Set<Booking> bookings;
 
 }

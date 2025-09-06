@@ -11,4 +11,6 @@ public class UserExistByEmailException extends RuntimeException {
     public UserExistByEmailException(String message) {
         this.message = message;
     }
+
+
 }
