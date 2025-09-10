@@ -14,4 +14,5 @@ public interface MovieService {
 
     MovieResponse addMovie(MovieRequest request);
     MovieResponse updateMovie(String movieId, MovieRequest request);
+    void deleteMovie(String movieId);
 }

@@ -1,5 +1,5 @@
-server:
-  port: 8080
+
+
 
 spring:
   datasource:
@@ -16,6 +16,46 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+
+  cache:
+    type: caffeine
+    cache-names: movies, theaters, shows, screens, users
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=10m
+
+
+#app:
+#  token:
+#    secret: "MzY3NjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NA=="
+#    accessDuration: 30   # in minutes
+#    refreshDuration: 60  # in minutes
+
+
+## Internal Configuration
+#app:
+#  token:
+#    secret: "${TOKEN_SECRET:6OJTb36NI+zRK83avvt+11tUQGwoHhkA9cC3UM1mxuE=}"# Only for testing and development mode
+#    access-duration: "${TOKEN_ACCESS_DURATION:60}" # in minutes
+#    refresh-duration: "${TOKEN_REFRESH_DURATION:1440}" #in minutes 24*60
+
+#Context-path:
+#server:
+#  servlet:
+#    context-path: /api/v1
+
+#app:
+#  token:
+#    secret: "MzY3NjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NA=="
+#    accessDuration: 15
+#    refreshDuration: 60
+
+
 
 # Optional: Enable Flyway if you want DB migrations
 #  flyway:

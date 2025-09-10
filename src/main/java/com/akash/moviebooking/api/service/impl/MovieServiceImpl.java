@@ -9,6 +9,9 @@ import com.akash.moviebooking.api.mapper.MovieMapper;
 import com.akash.moviebooking.api.repository.MovieRepository;
 import com.akash.moviebooking.api.service.MovieService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,7 @@ public class MovieServiceImpl implements MovieService {
 
 
     @Override
+    @CachePut(value = "movies", key = "#result.title") // ✅ after adding, put in cache
     public MovieResponse addMovie(MovieRequest request) {
         Movie movie = new Movie();
         movie.setTitle(request.title());
@@ -37,6 +41,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @CachePut(value = "movies", key = "#movieId") // ✅ update cache when movie updates
     public MovieResponse updateMovie(String movieId, MovieRequest request) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new MovieNotFoundByIdException("Movie not found"));
@@ -60,6 +65,7 @@ public class MovieServiceImpl implements MovieService {
 
 
     @Override
+    @Cacheable(value = "movies", key = "#movieId") // ✅ fetch from cache if available
     public MovieResponse getMovie(String movieId) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new MovieNotFoundByIdException("Movie not found in Database"));
@@ -78,6 +84,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    // ⚡ optional: cache search results also (expire quickly)
+    @Cacheable(value = "movieSearch", key = "#search", unless = "#result.isEmpty()")
     public Set<MovieResponse> searchMovies(String search) {
         if (search == null || search.isBlank()) {
             return Set.of();
@@ -86,5 +94,11 @@ public class MovieServiceImpl implements MovieService {
         List<Movie> fetchedMovies = movieRepository.findByTitleContainingIgnoreCase(search);
 
         return movieMapper.movieResponseMapper(fetchedMovies);
+    }
+
+    // ✅ You may also add cache eviction if movies are deleted in future
+    @CacheEvict(value = "movies", key = "#movieId")
+    public void deleteMovie(String movieId) {
+        movieRepository.deleteById(movieId);
     }
 }
