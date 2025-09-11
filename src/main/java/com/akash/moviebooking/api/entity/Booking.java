@@ -59,6 +59,5 @@ public class Booking {
     @Column(name = "created_by")
     private String createdBy;
 
-//    @ManyToOne
-//    private Booking booking;
+
 }

@@ -1,3 +1,99 @@
+#
+#
+#
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/moviebookingapi?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+#    username: root
+#    password: Akash@2002
+#
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL8Dialect
+#        format_sql: true
+#
+#server:
+#  port: 8080
+#  servlet:
+#    context-path: /api/v1
+#
+#
+#  cache:
+#    type: caffeine
+#    cache-names: movies, theaters, shows, screens, users
+#    caffeine:
+#      spec: maximumSize=500,expireAfterWrite=10m
+#
+#
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: subhaa2024@gmail.com
+#    password: tsggyucqtibitjgi   # paste without spaces
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#
+#
+#
+##app:
+##  token:
+##    secret: "MzY3NjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NA=="
+##    accessDuration: 30   # in minutes
+##    refreshDuration: 60  # in minutes
+#
+#
+### Internal Configuration
+##app:
+##  token:
+##    secret: "${TOKEN_SECRET:6OJTb36NI+zRK83avvt+11tUQGwoHhkA9cC3UM1mxuE=}"# Only for testing and development mode
+##    access-duration: "${TOKEN_ACCESS_DURATION:60}" # in minutes
+##    refresh-duration: "${TOKEN_REFRESH_DURATION:1440}" #in minutes 24*60
+#
+##Context-path:
+##server:
+##  servlet:
+##    context-path: /api/v1
+#
+##app:
+##  token:
+##    secret: "MzY3NjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NA=="
+##    accessDuration: 15
+##    refreshDuration: 60
+#
+#
+#
+## Optional: Enable Flyway if you want DB migrations
+##  flyway:
+##    enabled: true
+##    locations: classpath:db/migration
+#
+## Optional: Logging for debugging queries
+##logging:
+##  level:
+##    root: INFO
+##    org.springframework.web: DEBUG
+##    org.hibernate.SQL: DEBUG
+##    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -17,55 +113,26 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
 
-server:
-  port: 8080
-  servlet:
-    context-path: /api/v1
-
-
   cache:
     type: caffeine
     cache-names: movies, theaters, shows, screens, users
     caffeine:
       spec: maximumSize=500,expireAfterWrite=10m
 
+  mail:   # ✅ moved inside spring
+    host: smtp.gmail.com
+    port: 587
+    username: subhaa2024@gmail.com
+    password: tsggyucqtibitjgi
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
-#app:
-#  token:
-#    secret: "MzY3NjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NA=="
-#    accessDuration: 30   # in minutes
-#    refreshDuration: 60  # in minutes
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
 
-
-## Internal Configuration
-#app:
-#  token:
-#    secret: "${TOKEN_SECRET:6OJTb36NI+zRK83avvt+11tUQGwoHhkA9cC3UM1mxuE=}"# Only for testing and development mode
-#    access-duration: "${TOKEN_ACCESS_DURATION:60}" # in minutes
-#    refresh-duration: "${TOKEN_REFRESH_DURATION:1440}" #in minutes 24*60
-
-#Context-path:
-#server:
-#  servlet:
-#    context-path: /api/v1
-
-#app:
-#  token:
-#    secret: "MzY3NjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NDcxNjQ3MTY0NzE2NA=="
-#    accessDuration: 15
-#    refreshDuration: 60
-
-
-
-# Optional: Enable Flyway if you want DB migrations
-#  flyway:
-#    enabled: true
-#    locations: classpath:db/migration
-
-# Optional: Logging for debugging queries
-#logging:
-#  level:
-#    root: INFO
-#    org.springframework.web: DEBUG
-#    org.hibernate.SQL: DEBUG
-#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
