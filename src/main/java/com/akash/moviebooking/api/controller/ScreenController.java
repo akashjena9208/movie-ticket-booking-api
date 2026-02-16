@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,7 +27,7 @@ public class ScreenController {
     private final RestResponseBuilder responseBuilder;
 
     @PostMapping
-    //@PreAuthorize("hasAuthority('THEATER_OWNER')")
+    @PreAuthorize("hasAuthority('THEATER_OWNER')")
     @Operation(summary = "Add a new screen", description = "Allows a THEATER_OWNER to add a new screen inside a theater")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Screen successfully created"),

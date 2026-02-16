@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class ShowController {
 
     // ===================== Add Show =====================
     @PostMapping("/theaters/{theaterId}/screens/{screenId}/shows")
-    //@PreAuthorize("hasAuthority('THEATER_OWNER')")
+    @PreAuthorize("hasAuthority('THEATER_OWNER')")
     @Operation(summary = "Add a new show", description = "Allows THEATER_OWNER to schedule a show for a movie in a specific screen")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Show successfully created"),

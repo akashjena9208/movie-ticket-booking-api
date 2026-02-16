@@ -1,0 +1,127 @@
+Project Explanation (Movie Ticket Booking System)
+
+My project is a Movie Ticket Booking System, a web-based application designed to allow users to book movie tickets online easily and securely.
+
+I developed the backend using Spring Boot, Spring Security, JWT, and MySQL, and I designed the system using a layered architecture with Controllers, Services, and Repositories.
+
+🎯 Problem Statement
+
+Traditional movie booking systems often face issues like:
+
+Double booking of seats
+
+Poor authentication security
+
+No proper role-based access
+
+Difficulty handling concurrent users
+
+So the goal of my project was to build a secure and scalable booking system that:
+
+Prevents seat conflicts
+
+Supports role-based access (User & Theater Owner)
+
+Handles secure authentication
+
+Manages bookings and payments properly
+
+🛠 Technologies Used
+
+Backend: Spring Boot
+
+Security: Spring Security + JWT (Access + Refresh Token)
+
+Database: MySQL
+
+ORM: JPA / Hibernate
+
+Build Tool: Maven
+
+Testing: Postman
+
+👨‍💻 My Role & Responsibilities
+
+I was responsible for:
+
+Designing the complete database schema
+
+Implementing authentication using JWT
+
+Implementing refresh token rotation
+
+Building role-based authorization
+
+Designing booking logic with transaction handling
+
+Implementing seat generation logic
+
+Integrating payment flow
+
+Sending email confirmation after successful booking
+
+Handling global exception management
+
+⭐ Key Features
+
+1️⃣ JWT-Based Authentication
+
+Access Token + Refresh Token
+
+Refresh token stored securely
+
+Logout invalidates refresh token
+
+2️⃣ Role-Based Access Control
+
+USER → Can book tickets, make payments, give feedback
+
+THEATER_OWNER → Can create theaters, screens, and schedule shows
+
+3️⃣ Automatic Seat Generation
+
+When a screen is created, seats are auto-generated (Row-wise A1, A2… B1, B2…)
+
+4️⃣ Concurrent Booking Protection
+
+Uses transaction management
+
+Prevents double booking of seats
+
+5️⃣ Payment Integration Logic
+
+Booking moves from PENDING → CONFIRMED after payment success
+
+6️⃣ Feedback System
+
+Only users who are logged in can add feedback
+
+🚧 Biggest Challenge & Learning
+
+The biggest challenge was handling concurrent seat booking.
+
+If two users try to book the same seat at the same time, the system must prevent duplicate booking.
+
+To solve this:
+
+I used database transactions
+
+Implemented proper locking mechanism
+
+Ensured ACID properties
+
+Handled seat availability validation before booking
+
+This helped me deeply understand:
+
+Transaction management
+
+Isolation levels
+
+Real-world concurrency problems
+
+How large booking systems like BookMyShow work internally
+
+🎯 Short Version (If interviewer says: “Explain in 30 seconds”)
+
+I built a Movie Ticket Booking System using Spring Boot and MySQL. It includes JWT-based authentication with refresh token rotation, role-based access control, automatic seat generation, secure booking with transaction management, payment processing, and feedback system. The main challenge was handling concurrent seat booking, which I solved using proper transaction management and locking
