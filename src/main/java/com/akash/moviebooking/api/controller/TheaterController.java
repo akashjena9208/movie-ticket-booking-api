@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
@@ -27,7 +28,7 @@ public class TheaterController {
     private final RestResponseBuilder responseBuilder;
 
     @PostMapping
-    //@PreAuthorize("hasAuthority('THEATER_OWNER')")
+    @PreAuthorize("hasAuthority('THEATER_OWNER')")
     @Operation(summary = "Add a theater", description = "Allows THEATER_OWNER to register a new theater")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Theater successfully created"),
@@ -54,7 +55,7 @@ public class TheaterController {
     }
 
     @PutMapping("/{theaterId}")
-    //@PreAuthorize("hasAuthority('THEATER_OWNER')")
+    @PreAuthorize("hasAuthority('THEATER_OWNER')")
     @Operation(summary = "Update theater", description = "Allows THEATER_OWNER to update details of a specific theater")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Theater successfully updated"),

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping
-   // @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Make a payment", description = "Allows a USER to make a payment for a booking")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Payment processed successfully"),
@@ -36,7 +37,7 @@ public class PaymentController {
     }
 
     @GetMapping("/{id}")
-    //@PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Get payment by ID", description = "Fetch details of a payment by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Payment details fetched successfully"),
@@ -47,7 +48,7 @@ public class PaymentController {
     }
 
     @GetMapping("/booking/{bookingId}")
-    //@PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     @Operation(summary = "Get payments for a booking", description = "Fetch all payments associated with a specific booking")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Payments fetched successfully"),
