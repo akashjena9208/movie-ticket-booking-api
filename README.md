@@ -19,6 +19,76 @@ It supports:
 - Role-based endpoint protection
 
 ---
+---
+# 🏗 Tech Stack
+
+* JDK:21
+* Backend: Spring Boot 3.5.5
+* Language: Java 8 to  21
+* Security: Spring Security 6 + JWT Authentication
+* Database: MySQL 8
+* ORM: JPA / Hibernate
+* Documentation: Swagger (OpenAPI)
+* Email: Spring Mail (SMTP)
+* Cache: Caffeine
+* API Testing: Postman + Junit 5
+* JaCoCo Code Coverage
+* Actuator
+* Lombok
+* Maven
+* SonarQube
+* Docker & Docker Compose
+
+---
+
+# 🐳 Run Using Docker (Recommended)
+
+## ✅ Prerequisites
+
+- Docker Desktop installed
+- Docker Compose installed
+- Java 21 (for building jar)
+
+---
+
+## 📦 Step 1 — Build the Application (build jar)
+```bash
+./mvnw clean package -DskipTests
+```
+
+
+### Step 2 — Run with Docker Compose
+```bash
+docker compose up --build
+```
+
+Stop containers:
+```
+docker compose down
+```
+
+Stop everything
+```bash
+docker compose down -v
+```
+
+
+To run in background:
+```
+docker compose up --build -d
+```
+
+View running containers:(After Running if Check)
+```
+docker ps
+```
+
+View logs:
+```
+docker logs movie-booking-api
+docker logs movie-mysql
+```
+---
 
 ## Base URL
 
@@ -142,23 +212,6 @@ User gives Feedback
 ```
 ---
 
----
-
-# 🏗 Tech Stack
-
-* Backend: Spring Boot 3  
-* Language: Java 17 & 21  
-* Security: Spring Security 6 + JWT  
-* Database: MySQL 8  
-* ORM: JPA / Hibernate  
-* API Testing: Postman  
-* Documentation: Swagger (OpenAPI)  
-* Email: Spring Mail (SMTP)  
-* Cache: Caffeine
-* Lombok
-* Maven
-
----
 
 ## Database Configuration (`application.yml`)
 

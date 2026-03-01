@@ -1,23 +1,80 @@
+#server:
+#  port: 8080
+#
+#spring:
+#  datasource:
+#    url: ${DB_URL}
+#    username: ${DB_USERNAME}
+#    password: ${DB_PASSWORD}
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: validate
+#    show-sql: false
+#
+#  mail:
+#    host: smtp.gmail.com
+#    port: 587
+#    username: ${MAIL_USERNAME}
+#    password: ${MAIL_PASSWORD}
+#    properties:
+#      mail:
+#        smtp:
+#          auth: true
+#          starttls:
+#            enable: true
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,info,metrics
+#
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.security: WARN
+#    com.akash.moviebooking: INFO
+
 server:
   port: 8080
+  servlet:
+    context-path: /api/v1
 
 spring:
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://host.docker.internal:3306/bms-tests?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: Akash@2002
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      connection-timeout: 20000
 
   jpa:
     hibernate:
-      ddl-auto: validate
-    show-sql: false
+      ddl-auto: validate   # safer for production
+    show-sql: false        # disable SQL logs in production
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: false
+
+  cache:
+    type: caffeine
+    cache-names: movies, theaters, shows, screens, users
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=10m
 
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    username: subhaa2024@gmail.com
+    password: tsggyucqtibitjgi
     properties:
       mail:
         smtp:
@@ -25,14 +82,27 @@ spring:
           starttls:
             enable: true
 
+# ================= JWT CONFIG =================
+jwt:
+  secret: my-prod-secret-key-my-prod-secret-key-my-prod-secret-key
+  access-token-validity: 900000   # 15 minutes
+
+# ================= ACTUATOR =================
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics   # limit exposure in production
+  endpoint:
+    health:
+      show-details: never              # hide details in production
 
+# ================= LOGGING =================
 logging:
   level:
     root: INFO
     org.springframework.security: WARN
     com.akash.moviebooking: INFO
+# ================= JACOCO =================
+jacoco:
+  enabled: false   # ✅ disable coverage agent in production
