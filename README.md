@@ -29,6 +29,11 @@ Swagger UI (API documentation & testing):
 ```
 http://localhost:8080/api/v1/swagger-ui.html
 ```
+
+OpenAPI JSON 
+```
+http://localhost:8080/api/v1/v3/api-docs
+```
 ------------------------------------------------------------------------
 # 📂 Project Structure
 ```

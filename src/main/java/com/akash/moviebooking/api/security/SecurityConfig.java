@@ -219,14 +219,39 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // Authorization rules
+//                // Authorization rules
+//                .authorizeHttpRequests(auth -> auth
+////                        .requestMatchers(
+////                                "/auth/**",
+////                                "/register",
+////                                "/v3/api-docs/**",
+////                                "/swagger-ui/**",
+////                                "/swagger-ui.html"
+////                        ).permitAll()
+//                                .requestMatchers(
+//                                        "/auth/**",
+//                                        "/register",
+//                                        "/v3/api-docs/**",
+//                                        "/swagger-ui/**",
+//                                        "/swagger-ui.html",
+//                                        "/api/v1/v3/api-docs/**",
+//                                        "/api/v1/swagger-ui/**"
+//                                ).permitAll()
+//
+//                        .anyRequest().authenticated()
+//                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/auth/**",
                                 "/register",
+
+                                // Swagger / OpenAPI
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+
+                                // Actuator (optional)
+                                "/actuator/**"
                         ).permitAll()
 
                         .anyRequest().authenticated()
