@@ -1,8 +1,10 @@
 # 🚀 Movie Booking System API
 
-A **Movie Booking System** built using **Spring Boot 3**, **Spring Security 6**, **JWT**, **MySQL**, and **Hibernate/JPA**.
-This system allows users to register, login, view movies, book tickets, provide feedback, and manage theaters, screens, and shows.
-it is a secure, role-based RESTful backend application that simulates a real-world cinema ticket booking platform.
+An enterprise-grade **Movie Booking System** built using **Spring Boot 3**, **Spring Security 6**, **JWT**, **MySQL**, and **Hibernate/JPA**.
+This project is a secure, role-based RESTful backend application that simulates a real-world cinema ticket booking platform. It provides complete workflows for movie management, theater and screen management, show scheduling, seat booking, payment processing, and user feedback  all designed with clean layered architecture and production-level standards.
+The system incorporates real-world production features such as stateless JWT authentication with refresh token rotation, custom global exception handling, standardized API response structures, Swagger documentation with API grouping, Caffeine caching, email notifications, Spring Boot Actuator monitoring, integration testing, JaCoCo test coverage, and SonarQube support.
+
+Together, these features make it a scalable, secure, and industry-standard backend solution suitable for real-world production environments.
 ---
 
 
@@ -411,8 +413,38 @@ This logic ensures dynamic and scalable seat creation based on screen capacity a
 8. Submit feedback
 
 ---
+---
 
+# 🧪 Testing & Code Coverage
+
+This project uses **JUnit 5** for unit and integration testing, and **JaCoCo** for code coverage analysis.
+
+---
+## Run Tests and Generate Coverage Report
+To execute the full build lifecycle, including testing and package generation:
+```bash
+./mvnw clean package
+```
+---
+
+Alternative Commands:
+
+---
+## Run Tests
+Run Unit Tests only:
+```bash
+./mvnw clean test
+```
+Generate Coverage Report
+```bash
+./mvnw verify
+```
 # 🖼 Images
+---
+![JaCoCo Test Coverage Report](src/main/resources/Information/jacocotestcoverage.png)
+
+---
+
 
 ## Booking Success Email Preview
 
@@ -427,6 +459,8 @@ This logic ensures dynamic and scalable seat creation based on screen capacity a
 ![Relationship Flow](src/main/resources/Information/relationship-flowchart.png.png)
 
 ---
+
+
 
 
 # ⚙️ How To Run
