@@ -8,47 +8,23 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+
 import java.time.Instant;
 import java.util.List;
 
-
 public interface ShowRepository extends JpaRepository<Show, String> {
 
-    public interface TheaterId {
-        String getTheater_TheaterId();     // exactly matches the property name
-    }
-
-    List<Show> findDistinctByStartsAtBetweenAndMovie_MovieIdAndScreen_ScreenType(
-            Instant start,
-            Instant end,
-            String movieId,
-            ScreenType screenType
-    );
-
-    @Query("SELECT s FROM Show s " +
-            "WHERE s.movie.movieId = :movieId " +
-            "AND s.startsAt BETWEEN :start AND :end " +
-            "AND s.screen.screenType = :screenType " +
-            "AND s.theater.id IN :theaterIds")
-    List<Show> findShowsForTheaters(
-            @Param("movieId") String movieId,
-            @Param("start") Instant start,
-            @Param("end") Instant end,
-            @Param("screenType") ScreenType screenType,
-            @Param("theaterIds") List<String> theaterIds
-    );
-
     @Query("""
-                SELECT DISTINCT t.id
-                FROM Theater t
-                JOIN t.screens s
-                JOIN s.shows sh
-                WHERE sh.movie.id = :movieId
-                  AND sh.startsAt BETWEEN :start AND :end
-                  AND s.screenType = :screenType
-                  AND t.city = :city
+            SELECT DISTINCT t.theaterId
+            FROM Theater t
+            JOIN t.screens s
+            JOIN s.shows sh
+            WHERE sh.movie.movieId = :movieId
+              AND sh.startsAt BETWEEN :start AND :end
+              AND s.screenType = :screenType
+              AND t.city = :city
             """)
-    Page<String> findTheaterIdsWithMatchingShowsAndCity(
+    Page<String> findTheaterIds(
             @Param("movieId") String movieId,
             @Param("start") Instant start,
             @Param("end") Instant end,
@@ -57,5 +33,31 @@ public interface ShowRepository extends JpaRepository<Show, String> {
             Pageable pageable
     );
 
-
+    @Query("""
+            SELECT sh FROM Show sh
+            WHERE sh.movie.movieId = :movieId
+              AND sh.startsAt BETWEEN :start AND :end
+              AND sh.screen.screenType = :screenType
+              AND sh.theater.theaterId IN :theaterIds
+            """)
+    List<Show> findShowsForTheaters(
+            @Param("movieId") String movieId,
+            @Param("start") Instant start,
+            @Param("end") Instant end,
+            @Param("screenType") ScreenType screenType,
+            @Param("theaterIds") List<String> theaterIds
+    );
+    @Query("""
+           SELECT s FROM Show s
+           WHERE s.screen.screenId = :screenId
+           AND (
+                :start < s.endsAt
+                AND :end > s.startsAt
+           )
+           """)
+    List<Show> findConflictingShows(
+            String screenId,
+            Instant start,
+            Instant end
+    );
 }

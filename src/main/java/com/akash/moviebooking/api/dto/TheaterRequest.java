@@ -2,7 +2,9 @@ package com.akash.moviebooking.api.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
+@Builder
 public record TheaterRequest(
 
         @NotNull(message = "Name is required")

@@ -1,14 +1,17 @@
 package com.akash.moviebooking.api.util;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
-public class ErrorStructure{
+public class ErrorStructure {
 
-    private int statusCode;
-    @JsonProperty(namespace = "error_message")
-    private String errorMessage;
+    private LocalDateTime timestamp;
+    private int status;
+    private String error;
+    private String message;
+    private String path;
 }

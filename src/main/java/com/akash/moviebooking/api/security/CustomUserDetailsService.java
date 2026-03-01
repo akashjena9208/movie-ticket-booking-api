@@ -28,7 +28,7 @@
 //                .builder()
 //                .username(user.getEmail())
 //                .password(user.getPassword())
-//                .roles(user.getUserRole().name()) // USER / THEATER_OWNER
+//                .authorities(user.getUserRole().name()) // ✅ FIXED
 //                .build();
 //    }
 //}
@@ -52,17 +52,20 @@ public class CustomUserDetailsService implements UserDetailsService {
     loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        UserDetails user = userRepository.findByEmail(email);
+        UserDetails user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found")
+                );
 
-        if (user == null || user.isDelete()) {
-            throw new UsernameNotFoundException("User not found");
+        if (user.isDelete()) {
+            throw new UsernameNotFoundException("User deleted");
         }
 
         return org.springframework.security.core.userdetails.User
                 .builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
-                .authorities(user.getUserRole().name()) // ✅ FIXED
+                .roles(user.getUserRole().name())
                 .build();
     }
 }

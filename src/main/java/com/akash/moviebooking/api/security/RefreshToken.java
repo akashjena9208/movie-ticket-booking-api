@@ -1,88 +1,3 @@
-//////////package com.akash.moviebooking.api.security;
-//////////
-//////////import com.akash.moviebooking.api.entity.UserDetails;
-//////////import jakarta.persistence.*;
-//////////import lombok.*;
-//////////
-//////////import java.time.Instant;
-//////////
-//////////@Entity
-//////////@Getter
-//////////@Setter
-//////////@NoArgsConstructor
-//////////@AllArgsConstructor
-//////////@Builder
-//////////@Table(name = "refresh_tokens")
-//////////public class RefreshToken {
-//////////
-//////////    @Id
-//////////    @GeneratedValue(strategy = GenerationType.UUID)
-//////////    private String id;
-//////////
-//////////    @Column(nullable = false, unique = true)
-//////////    private String tokenHash;
-//////////
-//////////    @Column(nullable = false)
-//////////    private Instant expiryDate;
-//////////
-//////////    @OneToOne
-//////////    @JoinColumn(name = "user_id", nullable = false)
-//////////    private UserDetails user;
-//////////}
-////////package com.akash.moviebooking.api.security;
-////////
-////////import jakarta.persistence.*;
-////////import lombok.Getter;
-////////import lombok.Setter;
-////////
-////////import java.time.Instant;
-////////
-////////@Entity
-////////@Getter
-////////@Setter
-////////public class RefreshToken {
-////////
-////////    @Id
-////////    @GeneratedValue(strategy = GenerationType.UUID)
-////////    private String id;
-////////
-////////    @Column(nullable = false)
-////////    private String email;
-////////
-////////    @Column(nullable = false)
-////////    private String tokenHash;
-////////
-////////    @Column(nullable = false)
-////////    private Instant expiryDate;
-////////}
-////////
-////////
-//////package com.akash.moviebooking.api.security;
-//////
-//////import jakarta.persistence.*;
-//////import lombok.Getter;
-//////import lombok.Setter;
-//////
-//////import java.time.Instant;
-//////
-//////@Entity
-//////@Getter
-//////@Setter
-//////public class RefreshToken {
-//////
-//////    @Id
-//////    @GeneratedValue(strategy = GenerationType.UUID)
-//////    private String id;
-//////
-//////    @Column(nullable = false)
-//////    private String email;
-//////
-//////    @Column(nullable = false)
-//////    private String tokenHash;
-//////
-//////    @Column(nullable = false)
-//////    private Instant expiryDate;
-//////}
 ////package com.akash.moviebooking.api.security;
 ////
 ////import com.akash.moviebooking.api.entity.UserDetails;
@@ -91,10 +6,10 @@
 ////import lombok.Setter;
 ////
 ////import java.time.Instant;
-////
 ////@Entity
 ////@Getter
 ////@Setter
+////@Table(name = "refresh_token")
 ////public class RefreshToken {
 ////
 ////    @Id
@@ -102,22 +17,23 @@
 ////    private String id;
 ////
 ////    @OneToOne
-////    @JoinColumn(name = "user_id")
+////    @JoinColumn(name = "user_id", unique = true)
 ////    private UserDetails user;
 ////
-////    @Column(nullable = false, unique = true)
+////    @Column(nullable = false)
 ////    private String token;
 ////
+////    @Column(nullable = false)
 ////    private Instant expiryDate;
 ////}
-package com.akash.moviebooking.api.security;
-
-import com.akash.moviebooking.api.entity.UserDetails;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.time.Instant;
+//package com.akash.moviebooking.api.security;
+//
+//import com.akash.moviebooking.api.entity.UserDetails;
+//import jakarta.persistence.*;
+//import lombok.Getter;
+//import lombok.Setter;
+//
+//import java.time.Instant;
 //
 //@Entity
 //@Getter
@@ -134,11 +50,20 @@ import java.time.Instant;
 //    private UserDetails user;
 //
 //    @Column(nullable = false)
-//    private String tokenHash;   // 🔥 store HASHED token
+//    private String tokenHash;   // 🔐 hashed token
 //
 //    @Column(nullable = false)
 //    private Instant expiryDate;
 //}
+package com.akash.moviebooking.api.security;
+
+import com.akash.moviebooking.api.entity.UserDetails;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.Instant;
+
 @Entity
 @Getter
 @Setter
@@ -150,11 +75,11 @@ public class RefreshToken {
     private String id;
 
     @OneToOne
-    @JoinColumn(name = "user_id", unique = true)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private UserDetails user;
 
     @Column(nullable = false)
-    private String token;
+    private String tokenHash;
 
     @Column(nullable = false)
     private Instant expiryDate;

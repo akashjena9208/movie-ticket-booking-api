@@ -1,19 +1,285 @@
+////
+////package com.akash.moviebooking.api.service.impl;
+////
+////import com.akash.moviebooking.api.dto.BookingRequestDto;
+////import com.akash.moviebooking.api.dto.BookingResponseDto;
+////import com.akash.moviebooking.api.entity.Booking;
+////import com.akash.moviebooking.api.entity.Seat;
+////import com.akash.moviebooking.api.entity.Show;
+////import com.akash.moviebooking.api.entity.UserDetails;
+////import com.akash.moviebooking.api.enums.BookingStatus;
+////import com.akash.moviebooking.api.exceptions.BookingNotFoundException;
+////import com.akash.moviebooking.api.exceptions.ResourceNotFoundException;
+////import com.akash.moviebooking.api.mapper.BookingMapper;
+////import com.akash.moviebooking.api.repository.BookingRepository;
+////import com.akash.moviebooking.api.repository.SeatRepository;
+////import com.akash.moviebooking.api.repository.ShowRepository;
+////import com.akash.moviebooking.api.repository.UserRepository;
+////import com.akash.moviebooking.api.service.BookingService;
+////import jakarta.transaction.Transactional;
+////import lombok.RequiredArgsConstructor;
+////import org.springframework.stereotype.Service;
+////
+////import java.util.List;
+////
+////@Service
+////@RequiredArgsConstructor
+////@Transactional
+////public class BookingServiceImpl implements BookingService {
+////
+////    private final BookingRepository bookingRepository;
+////    private final UserRepository userRepository;
+////    private final ShowRepository showRepository;
+////    private final SeatRepository seatRepository;
+////    private final BookingMapper bookingMapper;
+////
+////    @Override
+////    public BookingResponseDto createBooking(BookingRequestDto dto) {
+////
+////        UserDetails user = userRepository.findById(dto.userId())
+////                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + dto.userId()));
+////
+////        Show show = showRepository.findById(dto.showId())
+////                .orElseThrow(() -> new ResourceNotFoundException("Show not found with ID: " + dto.showId()));
+////
+////        List<Seat> seats = seatRepository.findAllById(dto.seatIds());
+////
+////        if (seats.size() != dto.seatIds().size()) {
+////            throw new ResourceNotFoundException("One or more seats not found");
+////        }
+////
+////        double totalAmount = seats.stream()
+////                .mapToDouble(seat -> seat.getPrice() != null ? seat.getPrice() : 250.0)
+////                .sum();
+////
+////        Booking booking = new Booking();
+////        booking.setUser(user);
+////        booking.setShow(show);
+////        booking.setSeats(seats);
+////        booking.setTotalAmount(totalAmount);
+////        booking.setBookingStatus(BookingStatus.PENDING);
+////
+////        return bookingMapper.toDto(bookingRepository.save(booking));
+////    }
+////
+////    @Override
+////    public BookingResponseDto getBookingById(String id) {
+////        return bookingRepository.findById(id)
+////                .map(bookingMapper::toDto)
+////                .orElseThrow(() -> new BookingNotFoundException(id));
+////    }
+////
+////    @Override
+////    public List<BookingResponseDto> getUserBookings(String userId) {
+////        return bookingRepository.findByUser_UserId(userId)
+////                .stream()
+////                .map(bookingMapper::toDto)
+////                .toList();
+////    }
+////
+////    @Override
+////    public BookingResponseDto cancelBooking(String id) {
+////        Booking booking = bookingRepository.findById(id)
+////                .orElseThrow(() -> new BookingNotFoundException(id));
+////
+////        booking.setBookingStatus(BookingStatus.CANCELLED);
+////        return bookingMapper.toDto(bookingRepository.save(booking));
+////    }
+////}
+//////package com.akash.moviebooking.api.service.impl;
+//////
+//////import com.akash.moviebooking.api.dto.BookingRequestDto;
+//////import com.akash.moviebooking.api.dto.BookingResponseDto;
+//////import com.akash.moviebooking.api.entity.Booking;
+//////import com.akash.moviebooking.api.enums.BookingStatus;
+//////import com.akash.moviebooking.api.exceptions.BookingNotFoundException;
+//////import com.akash.moviebooking.api.mapper.BookingMapper;
+//////import com.akash.moviebooking.api.repository.BookingRepository;
+//////import com.akash.moviebooking.api.repository.SeatRepository;
+//////import com.akash.moviebooking.api.repository.ShowRepository;
+//////import com.akash.moviebooking.api.repository.UserRepository;
+//////import com.akash.moviebooking.api.service.BookingService;
+//////import jakarta.transaction.Transactional;
+//////import lombok.RequiredArgsConstructor;
+//////import org.springframework.stereotype.Service;
+//////
+//////import java.util.List;
+//////
+//////@Service
+//////@RequiredArgsConstructor
+//////@Transactional
+//////public class BookingServiceImpl implements BookingService {
+//////
+//////    private final BookingRepository bookingRepository;
+//////    private final UserRepository userRepository;
+//////    private final ShowRepository showRepository;
+//////    private final SeatRepository seatRepository;
+//////    private final BookingMapper bookingMapper;
+//////
+//////    @Override
+//////    public BookingResponseDto createBooking(BookingRequestDto dto) {
+//////        var user = userRepository.findById(dto.userId())
+//////                .orElseThrow(() -> new RuntimeException("User not found"));
+//////        var show = showRepository.findById(dto.showId())
+//////                .orElseThrow(() -> new RuntimeException("Show not found"));
+//////        var seats = seatRepository.findAllById(dto.seatIds());
+//////
+//////        if (seats.size() != dto.seatIds().size()) {
+//////            throw new RuntimeException("One or more seats not found");
+//////        }
+//////
+//////        //double totalAmount = seats.size() * 250.0; // Example pricing logic
+//////
+//////        // ✅ Better pricing logic: sum of seat prices
+//////        double totalAmount = seats.stream()
+//////                .mapToDouble(seat -> seat.getPrice() != null ? seat.getPrice() : 250.0)
+//////                .sum();
+//////
+//////
+//////
+//////        Booking booking = new Booking();
+//////        booking.setUser(user);
+//////        booking.setShow(show);
+//////        booking.setSeats(seats);
+//////        booking.setTotalAmount(totalAmount);
+//////        booking.setBookingStatus(BookingStatus.PENDING);
+//////
+//////        Booking saved = bookingRepository.save(booking);
+//////        return bookingMapper.toDto(saved);
+//////    }
+//////
+//////    @Override
+//////    public BookingResponseDto getBookingById(String id) {
+//////        return bookingRepository.findById(id)
+//////                .map(bookingMapper::toDto)
+//////                .orElseThrow(() -> new BookingNotFoundException(id));
+//////    }
+//////
+//////    @Override
+//////    public List<BookingResponseDto> getUserBookings(String userId) {
+//////        return bookingRepository.findByUser_UserId(userId)
+//////                .stream()
+//////                .map(bookingMapper::toDto)
+//////                .toList();
+//////    }
+//////
+//////    @Override
+//////    public BookingResponseDto cancelBooking(String id) {
+//////        Booking booking = bookingRepository.findById(id)
+//////                .orElseThrow(() -> new BookingNotFoundException(id));
+//////
+//////        booking.setBookingStatus(BookingStatus.CANCELLED);
+//////        return bookingMapper.toDto(bookingRepository.save(booking));
+//////    }
+//////}
+////package com.akash.moviebooking.api.service.impl;
+////
+////import com.akash.moviebooking.api.dto.BookingRequestDto;
+////import com.akash.moviebooking.api.dto.BookingResponseDto;
+////import com.akash.moviebooking.api.entity.Booking;
+////import com.akash.moviebooking.api.entity.Seat;
+////import com.akash.moviebooking.api.entity.Show;
+////import com.akash.moviebooking.api.entity.UserDetails;
+////import com.akash.moviebooking.api.enums.BookingStatus;
+////import com.akash.moviebooking.api.exceptions.BookingNotFoundException;
+////import com.akash.moviebooking.api.exceptions.ResourceNotFoundException;
+////import com.akash.moviebooking.api.mapper.BookingMapper;
+////import com.akash.moviebooking.api.repository.BookingRepository;
+////import com.akash.moviebooking.api.repository.SeatRepository;
+////import com.akash.moviebooking.api.repository.ShowRepository;
+////import com.akash.moviebooking.api.repository.UserRepository;
+////import com.akash.moviebooking.api.service.BookingService;
+////import jakarta.transaction.Transactional;
+////import lombok.RequiredArgsConstructor;
+////import org.springframework.stereotype.Service;
+////
+////import java.util.List;
+////
+////@Service
+////@RequiredArgsConstructor
+////@Transactional
+////public class BookingServiceImpl implements BookingService {
+////
+////    private final BookingRepository bookingRepository;
+////    private final UserRepository userRepository;
+////    private final ShowRepository showRepository;
+////    private final SeatRepository seatRepository;
+////    private final BookingMapper bookingMapper;
+////
+////    @Override
+////    public BookingResponseDto createBooking(BookingRequestDto dto) {
+////
+////        UserDetails user = userRepository.findById(dto.userId())
+////                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + dto.userId()));
+////
+////        Show show = showRepository.findById(dto.showId())
+////                .orElseThrow(() -> new ResourceNotFoundException("Show not found with ID: " + dto.showId()));
+////
+////        List<Seat> seats = seatRepository.findAllById(dto.seatIds());
+////
+////        if (seats.size() != dto.seatIds().size()) {
+////            throw new ResourceNotFoundException("One or more seats not found");
+////        }
+////
+////        double totalAmount = seats.stream()
+////                .mapToDouble(seat -> seat.getPrice() != null ? seat.getPrice() : 250.0)
+////                .sum();
+////
+////        Booking booking = new Booking();
+////        booking.setUser(user);
+////        booking.setShow(show);
+////        booking.setSeats(seats);
+////        booking.setTotalAmount(totalAmount);
+////        booking.setBookingStatus(BookingStatus.PENDING);
+////
+////        return bookingMapper.toDto(bookingRepository.save(booking));
+////    }
+////
+////    @Override
+////    public BookingResponseDto getBookingById(String id) {
+////        return bookingRepository.findById(id)
+////                .map(bookingMapper::toDto)
+////                .orElseThrow(() -> new BookingNotFoundException(id));
+////    }
+////
+////    @Override
+////    public List<BookingResponseDto> getUserBookings(String userId) {
+////        return bookingRepository.findByUser_UserId(userId)
+////                .stream()
+////                .map(bookingMapper::toDto)
+////                .toList();
+////    }
+////
+////    @Override
+////    public BookingResponseDto cancelBooking(String id) {
+////        Booking booking = bookingRepository.findById(id)
+////                .orElseThrow(() -> new BookingNotFoundException(id));
+////
+////        booking.setBookingStatus(BookingStatus.CANCELLED);
+////        return bookingMapper.toDto(bookingRepository.save(booking));
+////    }
+////}
 //package com.akash.moviebooking.api.service.impl;
 //
 //import com.akash.moviebooking.api.dto.BookingRequestDto;
 //import com.akash.moviebooking.api.dto.BookingResponseDto;
 //import com.akash.moviebooking.api.entity.Booking;
+//import com.akash.moviebooking.api.entity.Seat;
+//import com.akash.moviebooking.api.entity.Show;
+//import com.akash.moviebooking.api.entity.UserDetails;
 //import com.akash.moviebooking.api.enums.BookingStatus;
 //import com.akash.moviebooking.api.exceptions.BookingNotFoundException;
+//import com.akash.moviebooking.api.exceptions.ResourceNotFoundException;
 //import com.akash.moviebooking.api.mapper.BookingMapper;
 //import com.akash.moviebooking.api.repository.BookingRepository;
 //import com.akash.moviebooking.api.repository.SeatRepository;
 //import com.akash.moviebooking.api.repository.ShowRepository;
 //import com.akash.moviebooking.api.repository.UserRepository;
 //import com.akash.moviebooking.api.service.BookingService;
-//import jakarta.transaction.Transactional;
 //import lombok.RequiredArgsConstructor;
+//import org.springframework.security.core.context.SecurityContextHolder;
 //import org.springframework.stereotype.Service;
+//import org.springframework.transaction.annotation.Transactional;
 //
 //import java.util.List;
 //
@@ -26,62 +292,102 @@
 //    private final UserRepository userRepository;
 //    private final ShowRepository showRepository;
 //    private final SeatRepository seatRepository;
-//    private final BookingMapper bookingMapper;
+//    private final BookingMapper mapper;
 //
-//    @Override
-//    public BookingResponseDto createBooking(BookingRequestDto dto) {
-//        var user = userRepository.findById(dto.userId())
-//                .orElseThrow(() -> new RuntimeException("User not found"));
-//        var show = showRepository.findById(dto.showId())
-//                .orElseThrow(() -> new RuntimeException("Show not found"));
-//        var seats = seatRepository.findAllById(dto.seatIds());
+////    @Override
+////    public BookingResponseDto createBooking(BookingRequestDto request) {
+////
+////        UserDetails user = userRepository.findById(request.userId())
+////                .orElseThrow(() ->
+////                        new ResourceNotFoundException("User not found."));
+////
+////        Show show = showRepository.findById(request.showId())
+////                .orElseThrow(() ->
+////                        new ResourceNotFoundException("Show not found."));
+////
+////        List<Seat> seats = seatRepository.findAllById(request.seatIds());
+////
+////        if (seats.size() != request.seatIds().size()) {
+////            throw new ResourceNotFoundException("One or more selected seats are invalid.");
+////        }
+////
+////        double totalAmount = seats.stream()
+////                .mapToDouble(seat -> seat.getPrice() != null ? seat.getPrice() : 250.0)
+////                .sum();
+////
+////        Booking booking = new Booking();
+////        booking.setUser(user);
+////        booking.setShow(show);
+////        booking.setSeats(seats);
+////        booking.setTotalAmount(totalAmount);
+////        booking.setBookingStatus(BookingStatus.PENDING);
+////
+////        return mapper.toDto(bookingRepository.save(booking));
+////    }
+//@Override
+//public BookingResponseDto createBooking(BookingRequestDto request) {
 //
-//        if (seats.size() != dto.seatIds().size()) {
-//            throw new RuntimeException("One or more seats not found");
-//        }
+//    String email = SecurityContextHolder
+//            .getContext()
+//            .getAuthentication()
+//            .getName();
 //
-//        //double totalAmount = seats.size() * 250.0; // Example pricing logic
+//    UserDetails user = userRepository.findByEmail(email)
+//            .orElseThrow(() ->
+//                    new ResourceNotFoundException("Authenticated user not found."));
 //
-//        // ✅ Better pricing logic: sum of seat prices
-//        double totalAmount = seats.stream()
-//                .mapToDouble(seat -> seat.getPrice() != null ? seat.getPrice() : 250.0)
-//                .sum();
+//    Show show = showRepository.findById(request.showId())
+//            .orElseThrow(() ->
+//                    new ResourceNotFoundException("Show not found."));
 //
+//    List<Seat> seats = seatRepository.findAllById(request.seatIds());
 //
-//
-//        Booking booking = new Booking();
-//        booking.setUser(user);
-//        booking.setShow(show);
-//        booking.setSeats(seats);
-//        booking.setTotalAmount(totalAmount);
-//        booking.setBookingStatus(BookingStatus.PENDING);
-//
-//        Booking saved = bookingRepository.save(booking);
-//        return bookingMapper.toDto(saved);
+//    if (seats.size() != request.seatIds().size()) {
+//        throw new ResourceNotFoundException("One or more selected seats are invalid.");
 //    }
 //
+//    double totalAmount = seats.stream()
+//            .mapToDouble(seat -> seat.getPrice() != null ? seat.getPrice() : 250.0)
+//            .sum();
+//
+//    Booking booking = new Booking();
+//    booking.setUser(user);
+//    booking.setShow(show);
+//    booking.setSeats(seats);
+//    booking.setTotalAmount(totalAmount);
+//    booking.setBookingStatus(BookingStatus.PENDING);
+//
+//    return mapper.toDto(bookingRepository.save(booking));
+//}
 //    @Override
-//    public BookingResponseDto getBookingById(String id) {
-//        return bookingRepository.findById(id)
-//                .map(bookingMapper::toDto)
-//                .orElseThrow(() -> new BookingNotFoundException(id));
+//    public BookingResponseDto getBookingById(String bookingId) {
+//
+//        Booking booking = bookingRepository.findById(bookingId)
+//                .orElseThrow(() ->
+//                        new BookingNotFoundException(bookingId));
+//
+//        return mapper.toDto(booking);
 //    }
 //
 //    @Override
 //    public List<BookingResponseDto> getUserBookings(String userId) {
+//
 //        return bookingRepository.findByUser_UserId(userId)
 //                .stream()
-//                .map(bookingMapper::toDto)
+//                .map(mapper::toDto)
 //                .toList();
 //    }
 //
 //    @Override
-//    public BookingResponseDto cancelBooking(String id) {
-//        Booking booking = bookingRepository.findById(id)
-//                .orElseThrow(() -> new BookingNotFoundException(id));
+//    public BookingResponseDto cancelBooking(String bookingId) {
+//
+//        Booking booking = bookingRepository.findById(bookingId)
+//                .orElseThrow(() ->
+//                        new BookingNotFoundException(bookingId));
 //
 //        booking.setBookingStatus(BookingStatus.CANCELLED);
-//        return bookingMapper.toDto(bookingRepository.save(booking));
+//
+//        return mapper.toDto(bookingRepository.save(booking));
 //    }
 //}
 package com.akash.moviebooking.api.service.impl;
@@ -101,9 +407,10 @@ import com.akash.moviebooking.api.repository.SeatRepository;
 import com.akash.moviebooking.api.repository.ShowRepository;
 import com.akash.moviebooking.api.repository.UserRepository;
 import com.akash.moviebooking.api.service.BookingService;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -116,25 +423,51 @@ public class BookingServiceImpl implements BookingService {
     private final UserRepository userRepository;
     private final ShowRepository showRepository;
     private final SeatRepository seatRepository;
-    private final BookingMapper bookingMapper;
+    private final BookingMapper mapper;
 
     @Override
-    public BookingResponseDto createBooking(BookingRequestDto dto) {
+    public BookingResponseDto createBooking(BookingRequestDto request) {
 
-        UserDetails user = userRepository.findById(dto.userId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + dto.userId()));
+        if (request.showId() == null ||
+                request.seatIds() == null ||
+                request.seatIds().isEmpty()) {
+            throw new IllegalArgumentException("Invalid booking request.");
+        }
 
-        Show show = showRepository.findById(dto.showId())
-                .orElseThrow(() -> new ResourceNotFoundException("Show not found with ID: " + dto.showId()));
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
 
-        List<Seat> seats = seatRepository.findAllById(dto.seatIds());
+        UserDetails user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Authenticated user not found."));
 
-        if (seats.size() != dto.seatIds().size()) {
-            throw new ResourceNotFoundException("One or more seats not found");
+        Show show = showRepository.findById(request.showId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Show not found."));
+
+        List<Seat> seats = seatRepository.findAllById(request.seatIds());
+
+        if (seats.size() != request.seatIds().size()) {
+            throw new ResourceNotFoundException("One or more selected seats are invalid.");
+        }
+
+        // 🔥 Prevent double booking
+        boolean alreadyBooked = bookingRepository
+                .existsByShowAndSeatsInAndBookingStatus(
+                        show,
+                        seats,
+                        BookingStatus.CONFIRMED
+                );
+
+        if (alreadyBooked) {
+            throw new IllegalStateException("One or more seats are already booked.");
         }
 
         double totalAmount = seats.stream()
-                .mapToDouble(seat -> seat.getPrice() != null ? seat.getPrice() : 250.0)
+                .mapToDouble(seat ->
+                        seat.getPrice() != null ? seat.getPrice() : 250.0)
                 .sum();
 
         Booking booking = new Booking();
@@ -144,30 +477,40 @@ public class BookingServiceImpl implements BookingService {
         booking.setTotalAmount(totalAmount);
         booking.setBookingStatus(BookingStatus.PENDING);
 
-        return bookingMapper.toDto(bookingRepository.save(booking));
+        return mapper.toDto(bookingRepository.save(booking));
     }
 
     @Override
-    public BookingResponseDto getBookingById(String id) {
-        return bookingRepository.findById(id)
-                .map(bookingMapper::toDto)
-                .orElseThrow(() -> new BookingNotFoundException(id));
+    public BookingResponseDto getBookingById(String bookingId) {
+
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() ->
+                        new BookingNotFoundException(bookingId));
+
+        return mapper.toDto(booking);
     }
 
     @Override
     public List<BookingResponseDto> getUserBookings(String userId) {
         return bookingRepository.findByUser_UserId(userId)
                 .stream()
-                .map(bookingMapper::toDto)
+                .map(mapper::toDto)
                 .toList();
     }
 
     @Override
-    public BookingResponseDto cancelBooking(String id) {
-        Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new BookingNotFoundException(id));
+    public BookingResponseDto cancelBooking(String bookingId) {
+
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() ->
+                        new BookingNotFoundException(bookingId));
+
+        if (booking.getBookingStatus() == BookingStatus.CONFIRMED) {
+            throw new IllegalStateException("Cannot cancel confirmed booking.");
+        }
 
         booking.setBookingStatus(BookingStatus.CANCELLED);
-        return bookingMapper.toDto(bookingRepository.save(booking));
+
+        return mapper.toDto(bookingRepository.save(booking));
     }
 }

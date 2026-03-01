@@ -1,137 +1,171 @@
+//package com.akash.moviebooking.api.controller;
+//
+//import com.akash.moviebooking.api.dto.*;
+//import com.akash.moviebooking.api.service.MovieService;
+//import com.akash.moviebooking.api.util.ApiResponse;
+//import com.akash.moviebooking.api.util.RestResponseBuilder;
+//import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+//import io.swagger.v3.oas.annotations.tags.Tag;
+//import jakarta.servlet.http.HttpServletRequest;
+//import jakarta.validation.Valid;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.http.HttpStatus;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.web.bind.annotation.*;
+//
+//import java.util.Set;
+//
+//@RestController
+//@RequestMapping("/movies")
+//@RequiredArgsConstructor
+//@Tag(name = "Movie Management")
+//public class MovieController {
+//
+//    private final MovieService movieService;
+//    private final RestResponseBuilder responseBuilder;
+//
+//    @PostMapping
+//    //@PreAuthorize("hasAuthority('THEATER_OWNER')")
+//    @PreAuthorize("hasRole('THEATER_OWNER')")
+//    @SecurityRequirement(name = "bearerAuth")
+//    public ResponseEntity<ApiResponse<MovieResponse>> createMovie(
+//            @Valid @RequestBody MovieRequest request,
+//            HttpServletRequest httpRequest) {
+//
+//        return responseBuilder.success(
+//                HttpStatus.CREATED,
+//                "Movie created successfully.",
+//                movieService.addMovie(request),
+//                httpRequest
+//        );
+//    }
+//
+//    @GetMapping("/{id}")
+//    public ResponseEntity<ApiResponse<MovieResponse>> getMovie(
+//            @PathVariable String id,
+//            HttpServletRequest httpRequest) {
+//
+//        return responseBuilder.success(
+//                HttpStatus.OK,
+//                "Movie retrieved successfully.",
+//                movieService.getMovieById(id),
+//                httpRequest
+//        );
+//    }
+//
+//    @GetMapping("/search")
+//    public ResponseEntity<ApiResponse<Set<MovieResponse>>> searchMovies(
+//            @RequestParam String search,
+//            HttpServletRequest httpRequest) {
+//
+//        return responseBuilder.success(
+//                HttpStatus.OK,
+//                "Movies retrieved successfully.",
+//                movieService.searchMovies(search),
+//                httpRequest
+//        );
+//    }
+//}
 package com.akash.moviebooking.api.controller;
-import com.akash.moviebooking.api.dto.MovieRequest;
-import com.akash.moviebooking.api.dto.MovieResponse;
+
+import com.akash.moviebooking.api.dto.*;
 import com.akash.moviebooking.api.service.MovieService;
-import com.akash.moviebooking.api.util.ResponseStructure;
+import com.akash.moviebooking.api.util.ApiResponse;
 import com.akash.moviebooking.api.util.RestResponseBuilder;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
-
 @RestController
-@AllArgsConstructor
 @RequestMapping("/movies")
-@Tag(name = "Movie Controller", description = "APIs for managing movies")
+@RequiredArgsConstructor
+@Tag(name = "Movie Management")
 public class MovieController {
 
     private final MovieService movieService;
     private final RestResponseBuilder responseBuilder;
 
-    // ======================================================
-    // CREATE MOVIE (THEATER_OWNER ONLY)
-    // ======================================================
     @PostMapping
-    @PreAuthorize("hasAuthority('THEATER_OWNER')")
-    @Operation(summary = "Add a new movie",
-            description = "Allows THEATER_OWNER to create a new movie entry")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Movie successfully created"),
-            @ApiResponse(responseCode = "403", description = "Forbidden - Only THEATER_OWNER allowed")
-    })
-    public ResponseEntity<ResponseStructure<MovieResponse>> createMovie(
-            @Valid @RequestBody MovieRequest request) {
+    @PreAuthorize("hasRole('THEATER_OWNER')")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<ApiResponse<MovieResponse>> createMovie(
+            @Valid @RequestBody MovieRequest request,
+            Authentication authentication,
+            HttpServletRequest httpRequest) {
 
-        MovieResponse response = movieService.addMovie(request);
-
-        return responseBuilder.sucess(
+        return responseBuilder.success(
                 HttpStatus.CREATED,
-                "Movie created successfully",
-                response
+                "Movie created successfully.",
+                movieService.addMovie(request, authentication.getName()),
+                httpRequest
         );
     }
 
-    // ======================================================
-    // UPDATE MOVIE (THEATER_OWNER ONLY)
-    // ======================================================
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('THEATER_OWNER')")
-    @Operation(summary = "Update movie",
-            description = "Allows THEATER_OWNER to update an existing movie")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Movie successfully updated"),
-            @ApiResponse(responseCode = "404", description = "Movie not found")
-    })
-    public ResponseEntity<ResponseStructure<MovieResponse>> updateMovie(
+    @PreAuthorize("hasRole('THEATER_OWNER') and @movieSecurity.isOwner(#id, authentication)")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<ApiResponse<MovieResponse>> updateMovie(
             @PathVariable String id,
-            @Valid @RequestBody MovieRequest request) {
+            @Valid @RequestBody MovieRequest request,
+            HttpServletRequest httpRequest) {
 
-        MovieResponse response = movieService.updateMovie(id, request);
-
-        return responseBuilder.sucess(
+        return responseBuilder.success(
                 HttpStatus.OK,
-                "Movie updated successfully",
-                response
+                "Movie updated successfully.",
+                movieService.updateMovie(id, request),
+                httpRequest
         );
     }
 
-    // ======================================================
-    // GET MOVIE BY ID (PUBLIC)
-    // ======================================================
-    @GetMapping("/{movieId}")
-    @PreAuthorize("hasAuthority('USER')")
-    @Operation(summary = "Get movie by ID",
-            description = "Fetch movie details by movie ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Movie successfully fetched"),
-            @ApiResponse(responseCode = "404", description = "Movie not found")
-    })
-    public ResponseEntity<ResponseStructure<MovieResponse>> getMovie(
-            @PathVariable String movieId) {
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('THEATER_OWNER') and @movieSecurity.isOwner(#id, authentication)")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<ApiResponse<String>> deleteMovie(
+            @PathVariable String id,
+            HttpServletRequest httpRequest) {
 
-        MovieResponse movieResponse = movieService.getMovie(movieId);
+        movieService.deleteMovie(id);
 
-        return responseBuilder.sucess(
+        return responseBuilder.success(
                 HttpStatus.OK,
-                "Movie fetched successfully",
-                movieResponse
+                "Movie deleted successfully.",
+                "Deleted",
+                httpRequest
         );
     }
 
-    // ======================================================
-    // SEARCH MOVIES (PUBLIC)
-    // ======================================================
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<MovieResponse>> getMovie(
+            @PathVariable String id,
+            HttpServletRequest httpRequest) {
+
+        return responseBuilder.success(
+                HttpStatus.OK,
+                "Movie retrieved successfully.",
+                movieService.getMovieById(id),
+                httpRequest
+        );
+    }
+
     @GetMapping("/search")
+    public ResponseEntity<ApiResponse<Set<MovieResponse>>> searchMovies(
+            @RequestParam String search,
+            HttpServletRequest httpRequest) {
 
-    @Operation(summary = "Search movies",
-            description = "Search movies by title or genre")
-    public ResponseEntity<ResponseStructure<Set<MovieResponse>>> searchMovies(
-            @RequestParam String search) {
-
-        Set<MovieResponse> movieResponses =
-                movieService.searchMovies(search);
-
-        return responseBuilder.sucess(
+        return responseBuilder.success(
                 HttpStatus.OK,
-                "Movies fetched successfully",
-                movieResponses
-        );
-    }
-
-    // ======================================================
-    // DELETE MOVIE (THEATER_OWNER ONLY)
-    // ======================================================
-    @DeleteMapping("/{movieId}")
-    @PreAuthorize("hasAuthority('THEATER_OWNER')")
-    @Operation(summary = "Delete movie",
-            description = "Allows THEATER_OWNER to delete a movie")
-    public ResponseEntity<ResponseStructure<String>> deleteMovie(
-            @PathVariable String movieId) {
-
-        movieService.deleteMovie(movieId);
-
-        return responseBuilder.sucess(
-                HttpStatus.OK,
-                "Movie deleted successfully",
-                "Deleted Movie ID: " + movieId
+                "Movies retrieved successfully.",
+                movieService.searchMovies(search),
+                httpRequest
         );
     }
 }

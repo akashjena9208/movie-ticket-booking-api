@@ -1,9 +1,20 @@
+#server:
+#  port: 8080
+#  servlet:
+#    context-path: /api/v1
+#
 #spring:
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/bms-api?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+#    url: jdbc:mysql://localhost:3306/bms_aapi?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
 #    username: root
 #    password: Akash@2002
+#    hikari:
+#      maximum-pool-size: 10
+#      minimum-idle: 5
+#      idle-timeout: 30000
+#      max-lifetime: 1800000
+#      connection-timeout: 20000
 #
 #  jpa:
 #    show-sql: true
@@ -20,7 +31,7 @@
 #    caffeine:
 #      spec: maximumSize=500,expireAfterWrite=10m
 #
-#  mail:   # ✅ moved inside spring
+#  mail:
 #    host: smtp.gmail.com
 #    port: 587
 #    username: subhaa2024@gmail.com
@@ -32,96 +43,31 @@
 #          starttls:
 #            enable: true
 #
-#server:
-#  port: 8080
-#  servlet:
-#    context-path: /api/v1
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
+#  endpoint:
+#    health:
+#      show-details: always
 #
-#
-##management:
-##  endpoints:
-##    web:
-##      exposure:
-##        include: health, info, metrics, prometheus
-##  endpoint:
-##    health:
-##      show-details: always
-##  info:
-##    app:
-##      name: Movie Ticket Booking System API
-##      version: 0.0.1-SNAPSHOT
-##      description: RESTful backend for movie ticket booking
-#
-#
-##management:
-##  endpoints:
-##    web:
-##      exposure:
-##        include: "*"
-##  endpoint:
-##    health:
-##      show-details: always
-##  info:
-##    app:
-##      name: Movie Ticket Booking System API
-##      version: 0.0.1-SNAPSHOT
-##      description: RESTful backend for movie ticket booking
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.security: DEBUG
+#    com.akash.moviebooking: INFO
+spring:
+  application:
+    name: movie-booking-api
+
+  profiles:
+    active: dev   # default profile
+
 server:
-  port: 8080
   servlet:
     context-path: /api/v1
-
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bms_api?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: root
-    password: Akash@2002
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 30000
-      max-lifetime: 1800000
-      connection-timeout: 20000
-
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-        format_sql: true
-
-  cache:
-    type: caffeine
-    cache-names: movies, theaters, shows, screens, users
-    caffeine:
-      spec: maximumSize=500,expireAfterWrite=10m
-
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: subhaa2024@gmail.com
-    password: tsggyucqtibitjgi
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
 
 logging:
   level:
     root: INFO
-    org.springframework.security: DEBUG
-    com.akash.moviebooking: DEBUG+

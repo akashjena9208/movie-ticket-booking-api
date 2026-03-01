@@ -13,9 +13,6 @@ public record UserUpdationRequest(
                 message = "Username should be minimum of 3 and maximum of 20 alpha-numeric character and can have special characters . and _")
         String username,
 
-        @NotNull
-        @Email(message = "Invalid Email format")
-        String email,
 
         @NotNull
         @Pattern(regexp = "[6-9]\\d{9}$",
@@ -27,3 +24,6 @@ public record UserUpdationRequest(
         LocalDate dateOfBirth
 )
 {}
+//@NotNull
+//@Email(message = "Invalid Email format")
+//String email,

@@ -1,104 +1,174 @@
+//package com.akash.moviebooking.api.service.impl;
+//import com.akash.moviebooking.api.dto.MovieRequest;
+//import com.akash.moviebooking.api.dto.MovieResponse;
+//import com.akash.moviebooking.api.entity.Movie;
+//import com.akash.moviebooking.api.exceptions.MovieNotFoundByIdException;
+//import com.akash.moviebooking.api.mapper.MovieMapper;
+//import com.akash.moviebooking.api.repository.MovieRepository;
+//import com.akash.moviebooking.api.service.MovieService;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.stereotype.Service;
+//import org.springframework.transaction.annotation.Transactional;
+//
+//import java.util.Set;
+//@Service
+//@RequiredArgsConstructor
+//@Transactional
+//public class MovieServiceImpl implements MovieService {
+//
+//    private final MovieRepository movieRepository;
+//    private final MovieMapper mapper;
+//
+//
+//    @Override
+//    public MovieResponse getMovieById(String movieId) {
+//
+//        Movie movie = movieRepository.findById(movieId)
+//                .orElseThrow(() ->
+//                        new MovieNotFoundByIdException("Movie not found with the given ID."));
+//
+//        return mapper.toDto(movie, 0.0);
+//    }
+//
+//    @Override
+//    public Set<MovieResponse> searchMovies(String search) {
+//
+//        return mapper.toDto(movieRepository.findByTitleContainingIgnoreCase(search));
+//    }
+//
+//    @Override
+//    public MovieResponse addMovie(MovieRequest request) {
+//
+//        Movie movie = new Movie();
+//        movie.setTitle(request.title());
+//        movie.setDescription(request.description());
+//        movie.setCastList(request.castList());
+//        movie.setRuntime(request.runtime());
+//        movie.setCertificate(request.certificate());
+//        movie.setGenre(request.genre());
+//
+//        return mapper.toDto(movieRepository.save(movie), 0.0);
+//    }
+//
+//    @Override
+//    public MovieResponse updateMovie(String movieId, MovieRequest request) {
+//
+//        Movie movie = movieRepository.findById(movieId)
+//                .orElseThrow(() ->
+//                        new MovieNotFoundByIdException("Movie not found with the given ID."));
+//
+//        movie.setTitle(request.title());
+//        movie.setDescription(request.description());
+//        movie.setCastList(request.castList());
+//        movie.setRuntime(request.runtime());
+//        movie.setCertificate(request.certificate());
+//        movie.setGenre(request.genre());
+//
+//        return mapper.toDto(movieRepository.save(movie), 0.0);
+//    }
+//
+//    @Override
+//    public void deleteMovie(String movieId) {
+//
+//        if (!movieRepository.existsById(movieId)) {
+//            throw new MovieNotFoundByIdException("Movie not found with the given ID.");
+//        }
+//
+//        movieRepository.deleteById(movieId);
+//    }
+//}
 package com.akash.moviebooking.api.service.impl;
-
 import com.akash.moviebooking.api.dto.MovieRequest;
 import com.akash.moviebooking.api.dto.MovieResponse;
-import com.akash.moviebooking.api.entity.Feedback;
 import com.akash.moviebooking.api.entity.Movie;
+import com.akash.moviebooking.api.entity.UserDetails;
 import com.akash.moviebooking.api.exceptions.MovieNotFoundByIdException;
+import com.akash.moviebooking.api.exceptions.UserNotFoundByEmailException;
 import com.akash.moviebooking.api.mapper.MovieMapper;
 import com.akash.moviebooking.api.repository.MovieRepository;
+import com.akash.moviebooking.api.repository.UserRepository;
 import com.akash.moviebooking.api.service.MovieService;
-import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
-
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Transactional
 public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
-    private final MovieMapper movieMapper;
-
+    private final UserRepository userRepository;
+    private final MovieMapper mapper;
 
     @Override
-    @CachePut(value = "movies", key = "#result.title") // ✅ after adding, put in cache
-    public MovieResponse addMovie(MovieRequest request) {
+    public MovieResponse addMovie(MovieRequest request, String ownerEmail) {
+
+        UserDetails owner = userRepository.findByEmail(ownerEmail)
+                .orElseThrow(() ->
+                        new UserNotFoundByEmailException("Owner not found"));
+
         Movie movie = new Movie();
         movie.setTitle(request.title());
         movie.setDescription(request.description());
+        movie.setCastList(request.castList());
         movie.setRuntime(request.runtime());
         movie.setCertificate(request.certificate());
         movie.setGenre(request.genre());
-        movie.setCastList(request.castList());
+        movie.setOwner(owner);
 
-        Movie saved = movieRepository.save(movie);
-        return movieMapper.movieResponseMapper(saved, 0.0); // new movie has no ratings yet
+        return mapper.toDto(movieRepository.save(movie));
     }
 
     @Override
-    @CachePut(value = "movies", key = "#movieId") // ✅ update cache when movie updates
     public MovieResponse updateMovie(String movieId, MovieRequest request) {
+
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new MovieNotFoundByIdException("Movie not found"));
+                .orElseThrow(() ->
+                        new MovieNotFoundByIdException("Movie not found"));
 
         movie.setTitle(request.title());
         movie.setDescription(request.description());
+        movie.setCastList(request.castList());
         movie.setRuntime(request.runtime());
         movie.setCertificate(request.certificate());
         movie.setGenre(request.genre());
-        movie.setCastList(request.castList());
 
-        Movie updated = movieRepository.save(movie);
-
-        double avgRatings = movie.getFeedbacks().stream()
-                .mapToDouble(Feedback::getRating)
-                .average()
-                .orElse(0.0);
-
-        return movieMapper.movieResponseMapper(updated, avgRatings);
+        return mapper.toDto(movieRepository.save(movie));
     }
 
-
     @Override
-    @Cacheable(value = "movies", key = "#movieId") // ✅ fetch from cache if available
-    public MovieResponse getMovie(String movieId) {
+    public void deleteMovie(String movieId) {
+
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new MovieNotFoundByIdException("Movie not found in Database"));
+                .orElseThrow(() ->
+                        new MovieNotFoundByIdException("Movie not found"));
 
-        List<Feedback> feedbacks = movie.getFeedbacks();
-
-        double avgRatings = 0.0;
-        if (!feedbacks.isEmpty()) {
-            for (Feedback feedback : feedbacks) {
-                avgRatings += feedback.getRating();
-            }
-            avgRatings /= feedbacks.size();
-        }
-
-        return movieMapper.movieResponseMapper(movie, avgRatings);
+        movieRepository.delete(movie);
     }
 
     @Override
-    // ⚡ optional: cache search results also (expire quickly)
-    @Cacheable(value = "movieSearch", key = "#search", unless = "#result.isEmpty()")
+    @Transactional(readOnly = true)
+    public MovieResponse getMovieById(String movieId) {
+
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() ->
+                        new MovieNotFoundByIdException("Movie not found"));
+
+        return mapper.toDto(movie);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Set<MovieResponse> searchMovies(String search) {
+
         if (search == null || search.isBlank()) {
             return Set.of();
         }
 
-        List<Movie> fetchedMovies = movieRepository.findByTitleContainingIgnoreCase(search);
-
-        return movieMapper.movieResponseMapper(fetchedMovies);
-    }
-
-    // ✅ You may also add cache eviction if movies are deleted in future
-    @CacheEvict(value = "movies", key = "#movieId")
-    public void deleteMovie(String movieId) {
-        movieRepository.deleteById(movieId);
+        return mapper.toDto(
+                movieRepository.findByTitleContainingIgnoreCase(search)
+        );
     }
 }

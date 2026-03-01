@@ -99,6 +99,41 @@ movie-ticket-booking-system-api/
 -   HttpOnly Secure Cookies
 
 ------------------------------------------------------------------------
+# COMPLETE OWNER FLOW
+```
+Register as THEATER_OWNER
+↓
+Login (Get JWT)
+↓
+Create Theater
+↓
+Add Screens
+↓
+Schedule Shows
+↓
+Monitor Bookings
+↓
+Track Revenue
+```
+---
+# COMPLETE USER JOURNEY
+---
+```
+Register → Login → JWT
+↓
+Browse Movie
+↓
+Book Seat (PENDING)
+↓
+Make Payment (SUCCESS)
+↓
+Booking → CONFIRMED
+↓
+Email Sent
+↓
+User gives Feedback
+```
+---
 
 ---
 

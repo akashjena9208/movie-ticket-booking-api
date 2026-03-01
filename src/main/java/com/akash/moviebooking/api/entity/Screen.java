@@ -15,52 +15,87 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 
+//@Entity
+//@Getter
+//@Setter
+//@EntityListeners(AuditingEntityListener.class)
+//@ToString
+//public class Screen {
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.UUID)
+//    @Column(name = "screen_id")
+//    private String screenId;
+//
+//    @Column(name = "screen_type")
+//    @Enumerated(EnumType.STRING)
+//    private ScreenType screenType;
+//
+//    @Column(name = "capacity")
+//    private Integer capacity;
+//
+//    @Column(name = "no_of_rows")
+//    private Integer noOfRows;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "theater_id")
+//    private Theater theater;
+//
+//    @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @OrderBy(value = "name")
+//    @JsonIgnore
+//    private List<Seat> seats;
+//
+//    @OneToMany(mappedBy = "screen", fetch = FetchType.EAGER)
+//    @JsonIgnore
+//    private Set<Show> shows;
+//
+//    @CreatedDate
+//    @Column(name = "created_at", nullable = false, updatable = false)
+//    private Instant createdAt;
+//
+//    @LastModifiedDate
+//    @Column(name = "updated_at", nullable = false)
+//    private Instant updatedAt;
+//
+//    @CreatedBy
+//    @Column(name = "created_by")
+//    private String createdBy;
+//
+//
+//}
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
-@ToString
 public class Screen {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "screen_id")
     private String screenId;
 
-    @Column(name = "screen_type")
     @Enumerated(EnumType.STRING)
     private ScreenType screenType;
 
-    @Column(name = "capacity")
     private Integer capacity;
-
-    @Column(name = "no_of_rows")
     private Integer noOfRows;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theater_id")
     private Theater theater;
 
-    @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @OrderBy(value = "name")
-    @JsonIgnore
+    @OneToMany(mappedBy = "screen", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Seat> seats;
 
-    @OneToMany(mappedBy = "screen", fetch = FetchType.EAGER)
-    @JsonIgnore
+    @OneToMany(mappedBy = "screen", fetch = FetchType.LAZY)
     private Set<Show> shows;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
     @CreatedBy
-    @Column(name = "created_by")
     private String createdBy;
-
-
 }
