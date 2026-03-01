@@ -1,6 +1,4 @@
 package com.akash.moviebooking.api.security;
-
-import com.akash.moviebooking.api.entity.Movie;
 import com.akash.moviebooking.api.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -14,10 +12,6 @@ public class MovieSecurity {
 
     public boolean isOwner(String movieId, Authentication authentication) {
 
-        return movieRepository
-                .existsByMovieIdAndOwner_Email(
-                        movieId,
-                        authentication.getName()
-                );
+        return movieRepository.existsByMovieIdAndOwner_Email(movieId, authentication.getName());
     }
 }

@@ -10,9 +10,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableCaching
 public class MovieTicketBookingSystemApiApplication {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		SpringApplication.run(MovieTicketBookingSystemApiApplication.class, args);
-	}
+        SpringApplication.run(MovieTicketBookingSystemApiApplication.class, args);
+    }
 
 }

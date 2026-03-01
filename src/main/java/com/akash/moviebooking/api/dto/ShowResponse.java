@@ -8,9 +8,7 @@ import java.time.Instant;
 @Builder
 public record ShowResponse(
 
-        String showId,
-        Instant startsAt,
-        Instant endsAt,
+        String showId, Instant startsAt, Instant endsAt,
 
         String screenId, ScreenType screenType) {
 }

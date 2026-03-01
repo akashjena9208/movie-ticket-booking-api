@@ -119,13 +119,10 @@ public class ScreenServiceImpl implements ScreenService {
     @Override
     public ScreenResponse addScreen(ScreenRequest request, String theaterId) {
 
-        Theater theater = theaterRepository.findById(theaterId)
-                .orElseThrow(() ->
-                        new TheaterNotFoundByIdException("Theater not found with the given ID."));
+        Theater theater = theaterRepository.findById(theaterId).orElseThrow(() -> new TheaterNotFoundByIdException("Theater not found with the given ID."));
 
         if (request.noOfRows() > request.capacity()) {
-            throw new NoOfRowsExceedCapacityException(
-                    "Number of rows cannot exceed the total screen capacity.");
+            throw new NoOfRowsExceedCapacityException("Number of rows cannot exceed the total screen capacity.");
         }
 
         Screen screen = new Screen();
@@ -142,13 +139,9 @@ public class ScreenServiceImpl implements ScreenService {
     @Override
     public ScreenResponse getScreen(String theaterId, String screenId) {
 
-        theaterRepository.findById(theaterId)
-                .orElseThrow(() ->
-                        new TheaterNotFoundByIdException("Theater not found with the given ID."));
+        theaterRepository.findById(theaterId).orElseThrow(() -> new TheaterNotFoundByIdException("Theater not found with the given ID."));
 
-        Screen screen = screenRepository.findById(screenId)
-                .orElseThrow(() ->
-                        new ScreenNotFoundByIdException("Screen not found with the given ID."));
+        Screen screen = screenRepository.findById(screenId).orElseThrow(() -> new ScreenNotFoundByIdException("Screen not found with the given ID."));
 
         return mapper.toDto(screen);
     }

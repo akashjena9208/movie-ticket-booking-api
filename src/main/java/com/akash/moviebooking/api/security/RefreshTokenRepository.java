@@ -1,18 +1,3 @@
-//
-//package com.akash.moviebooking.api.security;
-//
-//import com.akash.moviebooking.api.entity.UserDetails;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//
-//import java.util.Optional;
-//
-//public interface RefreshTokenRepository
-//        extends JpaRepository<RefreshToken, String> {
-//
-//    Optional<RefreshToken> findByUser(UserDetails user);
-//
-//    void deleteByUser(UserDetails user);
-//}
 package com.akash.moviebooking.api.security;
 
 import com.akash.moviebooking.api.entity.UserDetails;
@@ -22,12 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-public interface RefreshTokenRepository
-        extends JpaRepository<RefreshToken, String> {
+public interface RefreshTokenRepository extends JpaRepository<RefreshToken, String> {
 
     Optional<RefreshToken> findByUser(UserDetails user);
 
-//    @Modifying
-//    @Transactional
-//    void deleteByUser(UserDetails user);
 }

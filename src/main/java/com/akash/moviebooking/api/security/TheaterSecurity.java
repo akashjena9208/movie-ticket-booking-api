@@ -34,13 +34,6 @@ public class TheaterSecurity {
 
     private final TheaterRepository theaterRepository;
 
-    /**
-     * Validates whether the authenticated user is the owner of the theater.
-     *
-     * @param theaterId the theater ID
-     * @param authentication current authenticated user
-     * @return true if owner matches, false otherwise
-     */
     public boolean isOwner(String theaterId, Authentication authentication) {
 
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -49,11 +42,6 @@ public class TheaterSecurity {
 
         String loggedInEmail = authentication.getName();
 
-        return theaterRepository.findById(theaterId)
-                .map(theater ->
-                        theater.getTheaterOwner() != null &&
-                                theater.getTheaterOwner().getEmail().equals(loggedInEmail)
-                )
-                .orElse(false);
+        return theaterRepository.findById(theaterId).map(theater -> theater.getTheaterOwner() != null && theater.getTheaterOwner().getEmail().equals(loggedInEmail)).orElse(false);
     }
 }

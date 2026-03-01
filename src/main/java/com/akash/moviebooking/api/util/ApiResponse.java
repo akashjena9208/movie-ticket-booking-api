@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Getter
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL) // 🔥 removes null fields automatically
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
 
     private LocalDateTime timestamp;
@@ -18,5 +18,5 @@ public class ApiResponse<T> {
     private String message;
     private T data;
     private String path;
-    private Map<String, String> errors; // for validation errors
+    private Map<String, String> errors;
 }

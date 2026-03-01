@@ -1,4 +1,3 @@
-//
 package com.akash.moviebooking.api.service;
 
 import com.akash.moviebooking.api.dto.TheaterRequest;

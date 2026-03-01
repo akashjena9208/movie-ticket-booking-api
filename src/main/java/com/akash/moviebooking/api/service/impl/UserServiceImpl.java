@@ -1,4 +1,5 @@
 package com.akash.moviebooking.api.service.impl;
+
 import com.akash.moviebooking.api.mapper.UserDetailsMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -159,52 +160,10 @@ public class UserServiceImpl implements UserService {
         return mapper.toDto(userRepository.save(user));
     }
 
-    //which one is best we write option 1 or 2
-    //option 1
-
-//    @Override
-//    public UserResponse updateUser(UserUpdationRequest request, String email) {
-//
-//        UserDetails user = userRepository.findByEmail(email)
-//                .orElseThrow(() ->
-//                        new UserNotFoundByEmailException("User not found with the provided email."));
-//
-//        if (!user.getEmail().equals(request.email())
-//                && userRepository.existsByEmail(request.email())) {
-//            throw new UserExistByEmailException("Another account already uses this email.");
-//        }
-//
-//        user.setUsername(request.username());
-//        user.setEmail(request.email());
-//        user.setPhoneNumber(request.phoneNumber());
-//        user.setDateOfBirth(request.dateOfBirth());
-//
-//        return mapper.toDto(userRepository.save(user));
-//    }
-//
-//    @Override
-//    public UserResponse softDeleteUser(String email) {
-//
-//        UserDetails user = userRepository.findByEmail(email)
-//                .orElseThrow(() ->
-//                        new UserNotFoundByEmailException("User not found with the provided email."));
-//
-//        user.setDelete(true);
-//        user.setDeletedAt(Instant.now());
-//
-//        return mapper.toDto(userRepository.save(user));
-//    }
-
-    //option 2
     @Override
     public UserResponse updateUser(UserUpdationRequest request, String email) {
-        UserDetails user = userRepository.findByEmailAndIsDeleteFalse(email)
-                .orElseThrow(() -> new UserNotFoundByEmailException("User not found with the provided email."));
+        UserDetails user = userRepository.findByEmailAndIsDeleteFalse(email).orElseThrow(() -> new UserNotFoundByEmailException("User not found with the provided email."));
 
-//        if (!user.getEmail().equals(request.email())
-//                && userRepository.existsByEmail(request.email())) {
-//            throw new UserExistByEmailException("Another account already uses this email.");
-//        }
 
         user.setUsername(request.username());
         //user.setEmail(request.email());
@@ -216,8 +175,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse softDeleteUser(String email) {
-        UserDetails user = userRepository.findByEmailAndIsDeleteFalse(email)
-                .orElseThrow(() -> new UserNotFoundByEmailException("User not found with the provided email."));
+        UserDetails user = userRepository.findByEmailAndIsDeleteFalse(email).orElseThrow(() -> new UserNotFoundByEmailException("User not found with the provided email."));
 
         user.setDelete(true);
         user.setDeletedAt(Instant.now());

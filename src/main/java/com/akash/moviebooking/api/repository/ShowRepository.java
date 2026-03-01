@@ -24,14 +24,7 @@ public interface ShowRepository extends JpaRepository<Show, String> {
               AND s.screenType = :screenType
               AND t.city = :city
             """)
-    Page<String> findTheaterIds(
-            @Param("movieId") String movieId,
-            @Param("start") Instant start,
-            @Param("end") Instant end,
-            @Param("screenType") ScreenType screenType,
-            @Param("city") String city,
-            Pageable pageable
-    );
+    Page<String> findTheaterIds(@Param("movieId") String movieId, @Param("start") Instant start, @Param("end") Instant end, @Param("screenType") ScreenType screenType, @Param("city") String city, Pageable pageable);
 
     @Query("""
             SELECT sh FROM Show sh
@@ -40,24 +33,15 @@ public interface ShowRepository extends JpaRepository<Show, String> {
               AND sh.screen.screenType = :screenType
               AND sh.theater.theaterId IN :theaterIds
             """)
-    List<Show> findShowsForTheaters(
-            @Param("movieId") String movieId,
-            @Param("start") Instant start,
-            @Param("end") Instant end,
-            @Param("screenType") ScreenType screenType,
-            @Param("theaterIds") List<String> theaterIds
-    );
+    List<Show> findShowsForTheaters(@Param("movieId") String movieId, @Param("start") Instant start, @Param("end") Instant end, @Param("screenType") ScreenType screenType, @Param("theaterIds") List<String> theaterIds);
+
     @Query("""
-           SELECT s FROM Show s
-           WHERE s.screen.screenId = :screenId
-           AND (
-                :start < s.endsAt
-                AND :end > s.startsAt
-           )
-           """)
-    List<Show> findConflictingShows(
-            String screenId,
-            Instant start,
-            Instant end
-    );
+            SELECT s FROM Show s
+            WHERE s.screen.screenId = :screenId
+            AND (
+                 :start < s.endsAt
+                 AND :end > s.startsAt
+            )
+            """)
+    List<Show> findConflictingShows(String screenId, Instant start, Instant end);
 }
